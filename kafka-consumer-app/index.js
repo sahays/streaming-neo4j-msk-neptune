@@ -5,35 +5,46 @@ const config = require("./config");
 const traversal = gremlin.process.AnonymousTraversalSource.traversal;
 const DriverRemoteConnection = gremlin.driver.DriverRemoteConnection;
 
-const g = traversal().withRemote(
-  new DriverRemoteConnection("http://" + config.neptune + "/gremlin")
-);
+const makeG = () => {
+  return traversal().withRemote(
+    new DriverRemoteConnection("http://" + config.neptuneEndpoint + "/gremlin")
+  );
+};
 
-const brokers = config.brokers.split(",");
-console.log("connecting to", brokers);
+const brokers = config.brokers;
 
 const kafka = new Kafka({
-  clientId: "kafka-consumer-app",
-  ssl: true,
+  clientId: config.clientId,
+  ssl: config.ssl,
   brokers: brokers
 });
 
-const consumer = kafka.consumer({ groupId: "neo4j" });
+const consumer = kafka.consumer({ groupId: config.groupId });
 
 const run = async () => {
   // Consuming
   await consumer.connect();
-  await consumer.subscribe({ topic: config.topic, fromBeginning: true });
+
+  config.topics.map(async topic => {
+    await consumer.subscribe({ topic: topic, fromBeginning: true });
+  });
+
+  const g = makeG();
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
+      console.log(topic, partition);
       const result = JSON.parse(message.value.toString());
+
       if (result.meta && result.payload) {
         const payload = result.payload;
         if (payload && payload.type === "node") {
           const id = payload.id;
           if (payload.before && payload.after) {
             // edited
+            g.V(id)
+              .properties(payload.after)
+              .next();
           } else if (payload.after) {
             // inserted
             payload.after.labels.map(label => {
@@ -45,6 +56,7 @@ const run = async () => {
             });
           } else if (payload.before) {
             // deleted
+            g.V(id).drop();
           }
         } else if (payload && payload.type === "relationship") {
           const type = payload.label; // e.g. KNOWS or ACTED_IN
@@ -63,4 +75,8 @@ const run = async () => {
   });
 };
 
-run().catch(console.error);
+try {
+  run().catch(console.error);
+} catch (e) {
+  console.log(e);
+}
