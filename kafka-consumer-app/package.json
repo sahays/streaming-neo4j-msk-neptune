@@ -1,0 +1,24 @@
+{
+  "name": "kafka-consumer-app",
+  "version": "1.0.0",
+  "description": "Kafka consumer app for reading Kafka streams and  pushing data into Amazon Neptune",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "Kafka",
+    "Amazon",
+    "Neptune",
+    "Amazon",
+    "MSK",
+    "Neo4j"
+  ],
+  "author": "Sanjeet Sahay",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "kafka-node": "^5.0.0"
+  }
+}
