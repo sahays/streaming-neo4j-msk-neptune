@@ -18,7 +18,6 @@
   "author": "Sanjeet Sahay",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "kafka-node": "^5.0.0"
+    "kafkajs": "^1.11.0"
   }
 }

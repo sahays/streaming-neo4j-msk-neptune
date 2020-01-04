@@ -1,27 +1,31 @@
-const kafka = require("kafka-node");
-const bp = require("body-parser");
+const { Kafka } = require("kafkajs");
 const config = require("./config");
 
-try {
-  // const Consumer = kafka.HighLevelConsumer;
-  const client = new kafka.KafkaClient(config.kafkaHost);
-  const kafkaConsumer = kafka.Consumer;
-  let consumer = new kafkaConsumer(
-    client,
-    [{ topic: config.topic, partition: 1 }],
-    {
-      fetchMaxWaitMs: 1000,
-      fetchMaxBytes: 1024 * 1024,
-      encoding: "utf8"
+const brokers = config.brokers.split(",");
+console.log("connecting to", brokers);
+
+const kafka = new Kafka({
+  clientId: "kafka-consumer-app",
+  ssl: true,
+  brokers: brokers
+});
+
+const consumer = kafka.consumer({ groupId: "neo4j" });
+
+const run = async () => {
+  // Consuming
+  await consumer.connect();
+  await consumer.subscribe({ topic: config.topic, fromBeginning: true });
+
+  await consumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      console.log({
+        partition,
+        offset: message.offset,
+        value: message.value.toString()
+      });
     }
-  );
-  consumer.on("message", async function(message) {
-    console.log("here");
-    console.log("kafka-> ", message.value);
   });
-  consumer.on("error", function(err) {
-    console.log("error", err);
-  });
-} catch (e) {
-  console.log(e);
-}
+};
+
+run().catch(console.error);
