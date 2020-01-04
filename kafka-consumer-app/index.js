@@ -33,20 +33,23 @@ const run = async () => {
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
-      console.log(topic, partition);
       const result = JSON.parse(message.value.toString());
+      console.log(topic, partition, result);
 
       if (result.meta && result.payload) {
         const payload = result.payload;
         if (payload && payload.type === "node") {
+          console.log("processing node", payload);
           const id = payload.id;
           if (payload.before && payload.after) {
             // edited
+            console.log("edited", id, payload.before, payload.after);
             g.V(id)
               .properties(payload.after)
               .next();
           } else if (payload.after) {
             // inserted
+            console.log("inserted", id, payload.after);
             payload.after.labels.map(label => {
               const inserted = payload.after.properties;
               g.V()
@@ -56,6 +59,7 @@ const run = async () => {
             });
           } else if (payload.before) {
             // deleted
+            console.log("deleted", id, payload.before);
             g.V(id).drop();
           }
         } else if (payload && payload.type === "relationship") {
