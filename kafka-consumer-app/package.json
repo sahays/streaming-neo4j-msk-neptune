@@ -18,6 +18,7 @@
   "author": "Sanjeet Sahay",
   "license": "MIT",
   "dependencies": {
+    "gremlin": "^3.4.4",
     "kafkajs": "^1.11.0"
   }
 }
