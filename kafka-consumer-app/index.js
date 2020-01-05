@@ -66,6 +66,7 @@ const run = async () => {
                   const val = inserted[key];
                   v.property(key, val);
                 });
+                v.property("id", id);
                 await v.next();
               });
             } else if (payload.before) {
