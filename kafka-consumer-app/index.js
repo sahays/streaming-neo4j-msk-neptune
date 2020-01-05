@@ -3,14 +3,15 @@ const gremlin = require("gremlin");
 const config = require("./config");
 
 const makeG = () => {
-  const traversal = gremlin.process.AnonymousTraversalSource.traversal;
   const DriverRemoteConnection = gremlin.driver.DriverRemoteConnection;
+  const Graph = gremlin.structure.Graph;
 
-  const g = traversal().withRemote(
-    new DriverRemoteConnection(
-      "wss://" + config.neptuneEndpoint + ":8182/gremlin"
-    )
+  dc = new DriverRemoteConnection(
+    "wss://" + config.neptuneEndpoint + ":8182/gremlin"
   );
+
+  const graph = new Graph();
+  const g = graph.traversal().withRemote(dc);
   return g;
 };
 
@@ -58,15 +59,15 @@ const run = async () => {
               console.log("inserted", id, payload.after);
               payload.after.labels.map(async label => {
                 const inserted = payload.after.properties;
-                let v = g.V().addV(label);
-                const keys = Object.keys(inserted);
-                keys.map(key => {
-                  const val = inserted[key];
-                  const name = "'" + key + "'";
-                  v = v.property(name, val);
-                  // console.log(name, val);
-                });
-                console.log(v.propertyMap());
+                let v = g.V().addV("'" + label + "'");
+                // const keys = Object.keys(inserted);
+                // keys.map(key => {
+                //   const val = inserted[key];
+                //   const name = "'" + key + "'";
+                //   v = v.property(name, val);
+                //   // console.log(name, val);
+                // });
+                // console.log(v.propertyMap());
                 await v.next();
               });
             } else if (payload.before) {
