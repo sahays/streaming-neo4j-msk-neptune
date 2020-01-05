@@ -60,13 +60,15 @@ const run = async () => {
               payload.after.labels.map(async label => {
                 const inserted = payload.after.properties;
                 console.log(label);
+                const {
+                  t: { id }
+                } = gremlin.process;
                 const v = g.addV(label);
                 const keys = Object.keys(inserted);
                 keys.map(key => {
                   const val = inserted[key];
                   v.property(key, val);
                 });
-                v.property("id", id);
                 await v.next();
               });
             } else if (payload.before) {
