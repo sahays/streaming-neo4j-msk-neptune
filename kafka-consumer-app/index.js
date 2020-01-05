@@ -43,7 +43,7 @@ const run = async () => {
       // console.log(topic, partition, message);
       if (message && message.value) {
         const result = JSON.parse(message.value.toString());
-        console.log(result);
+        // console.log(result);
 
         if (result.meta && result.payload) {
           const payload = result.payload;
@@ -52,7 +52,7 @@ const run = async () => {
             const id = payload.id;
             if (payload.before && payload.after) {
               // edited
-              const edited = payload.after.properties[0];
+              const edited = payload.after.properties;
               console.log("edited", id, payload.before, payload.after);
               g.V(id)
                 .properties(edited)
@@ -61,11 +61,15 @@ const run = async () => {
               // inserted
               console.log("inserted", id, payload.after);
               payload.after.labels.map(label => {
-                const inserted = payload.after.properties[0];
-                g.V()
-                  .addV(label)
-                  .properties(inserted)
-                  .next();
+                const inserted = payload.after.properties;
+                const v = g.V().addV(label);
+                const keys = Object.keys(inserted);
+                keys.map(key => {
+                  const val = keys[key];
+                  console.log(key, val);
+                  v.property(key, val);
+                });
+                v.next();
               });
             } else if (payload.before) {
               // deleted
