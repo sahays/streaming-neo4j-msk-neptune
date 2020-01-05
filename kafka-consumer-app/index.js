@@ -35,8 +35,8 @@ const run = async () => {
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
+      console.log(topic, partition, message);
       if (message && message.value) {
-        console.log(topic, partition);
         const result = JSON.parse(message.value.toString());
         console.log(result);
 
