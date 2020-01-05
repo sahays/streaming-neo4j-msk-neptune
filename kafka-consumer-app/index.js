@@ -46,17 +46,17 @@ const run = async () => {
           const payload = result.payload;
           if (payload && payload.type === "node") {
             console.log("processing node", payload);
-            const id = payload.id;
+            const payloadId = payload.id;
             if (payload.before && payload.after) {
               // edited
               const edited = payload.after.properties;
-              console.log("edited", id, payload.before, payload.after);
-              g.V(id)
+              console.log("edited", payloadId, payload.before, payload.after);
+              g.V(payloadId)
                 .properties(edited)
                 .next();
             } else if (payload.after) {
               // inserted
-              console.log("inserted", id, payload.after);
+              console.log("inserted", payloadId, payload.after);
               payload.after.labels.map(async label => {
                 const inserted = payload.after.properties;
                 console.log(label);
@@ -69,12 +69,13 @@ const run = async () => {
                   const val = inserted[key];
                   v.property(key, val);
                 });
+                v.property(id, payloadId);
                 await v.next();
               });
             } else if (payload.before) {
               // deleted
-              console.log("deleted", id, payload.before);
-              g.V(id).drop();
+              console.log("deleted", payloadId, payload.before);
+              g.V(payloadId).drop();
             }
           } else if (payload && payload.type === "relationship") {
             const type = payload.label; // e.g. KNOWS or ACTED_IN
