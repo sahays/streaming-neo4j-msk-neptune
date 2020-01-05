@@ -1,5 +1,5 @@
 module.exports = {
-  topics: ["Neo4jPersonTopic", "Neo4jRelsTopic"],
+  kafkaTopics: ["Neo4jPersonTopic", "Neo4jRelsTopic"],
   clientId: "kafka-consumer-app",
   ssl: true,
   groupId: "neo4j",

@@ -28,7 +28,7 @@ const run = async () => {
   // Consuming
   await consumer.connect();
 
-  config.topics.map(async topic => {
+  config.kafkaTopics.map(async topic => {
     await consumer.subscribe({ topic: topic, fromBeginning: true });
   });
 
@@ -64,8 +64,9 @@ const run = async () => {
                   const val = inserted[key];
                   const name = "'" + key + "'";
                   v = v.property(name, val);
-                  console.log(name, val);
+                  // console.log(name, val);
                 });
+                console.log(v.propertyMap());
                 await v.next();
               });
             } else if (payload.before) {
