@@ -60,15 +60,12 @@ const run = async () => {
               payload.after.labels.map(async label => {
                 const inserted = payload.after.properties;
                 console.log(label);
-                let v = g.addV(label);
+                const v = g.addV(label);
                 const keys = Object.keys(inserted);
                 keys.map(key => {
                   const val = inserted[key];
-                  const name = "'" + key + "'";
-                  v = v.property(name, val);
-                  // console.log(name, val);
+                  v.property(key, val);
                 });
-                // console.log(v.propertyMap());
                 await v.next();
               });
             } else if (payload.before) {
