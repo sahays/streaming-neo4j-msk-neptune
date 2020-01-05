@@ -65,9 +65,9 @@ const run = async () => {
                 keys.map(key => {
                   const val = inserted[key];
                   console.log(key, val);
-                  v.property(key, val);
+                  v.property("'" + key + "'", val);
                 });
-                v.next();
+                await v.next();
               });
             } else if (payload.before) {
               // deleted
