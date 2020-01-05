@@ -58,7 +58,7 @@ const run = async () => {
             } else if (payload.after) {
               // inserted
               console.log("inserted", id, payload.after);
-              payload.after.labels.map(label => {
+              payload.after.labels.map(async label => {
                 const inserted = payload.after.properties;
                 const v = g.V().addV(label);
                 const keys = Object.keys(inserted);
