@@ -2,13 +2,18 @@ const { Kafka } = require("kafkajs");
 const gremlin = require("gremlin");
 const config = require("./config");
 
-const traversal = gremlin.process.AnonymousTraversalSource.traversal;
-const DriverRemoteConnection = gremlin.driver.DriverRemoteConnection;
-
 const makeG = () => {
-  return traversal().withRemote(
-    new DriverRemoteConnection("http://" + config.neptuneEndpoint + "/gremlin")
+  const DriverRemoteConnection = gremlin.driver.DriverRemoteConnection;
+  const Graph = gremlin.structure.Graph;
+
+  dc = new DriverRemoteConnection(
+    "wss://" + config.neptuneEndpoint + ":8182/gremlin",
+    {}
   );
+
+  const graph = new Graph();
+  const g = graph.traversal().withRemote(dc);
+  return g;
 };
 
 const brokers = config.brokers;
