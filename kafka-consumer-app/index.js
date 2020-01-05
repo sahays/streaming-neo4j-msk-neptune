@@ -40,7 +40,7 @@ const run = async () => {
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
-      console.log(topic, partition, message);
+      // console.log(topic, partition, message);
       if (message && message.value) {
         const result = JSON.parse(message.value.toString());
         console.log(result);
@@ -52,15 +52,16 @@ const run = async () => {
             const id = payload.id;
             if (payload.before && payload.after) {
               // edited
+              const edited = payload.after.properties[0];
               console.log("edited", id, payload.before, payload.after);
               g.V(id)
-                .properties(payload.after)
+                .properties(edited)
                 .next();
             } else if (payload.after) {
               // inserted
               console.log("inserted", id, payload.after);
               payload.after.labels.map(label => {
-                const inserted = payload.after.properties;
+                const inserted = payload.after.properties[0];
                 g.V()
                   .addV(label)
                   .properties(inserted)
