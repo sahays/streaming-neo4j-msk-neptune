@@ -60,13 +60,13 @@ const run = async () => {
               console.log("inserted", id, payload.after);
               payload.after.labels.map(async label => {
                 const inserted = payload.after.properties;
-                const v = g.V().addV(label);
+                let v = g.V().addV(label);
                 const keys = Object.keys(inserted);
                 keys.map(key => {
                   const val = inserted[key];
-                  console.log(key, val);
-                  v.property("'" + key + "'", val);
+                  v = v.property("'" + key + "'", val);
                 });
+                console.log(v);
                 await v.next();
               });
             } else if (payload.before) {
