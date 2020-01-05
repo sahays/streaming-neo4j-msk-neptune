@@ -16,12 +16,10 @@ const makeG = () => {
   return g;
 };
 
-const brokers = config.brokers;
-
 const kafka = new Kafka({
   clientId: config.clientId,
   ssl: config.ssl,
-  brokers: brokers
+  brokers: config.kafkaBrokers
 });
 
 const consumer = kafka.consumer({ groupId: config.groupId });
@@ -65,7 +63,7 @@ const run = async () => {
                 const v = g.V().addV(label);
                 const keys = Object.keys(inserted);
                 keys.map(key => {
-                  const val = keys[key];
+                  const val = inserted[key];
                   console.log(key, val);
                   v.property(key, val);
                 });
