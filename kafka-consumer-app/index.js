@@ -37,11 +37,8 @@ const run = async () => {
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
-      // console.log(topic, partition, message);
       if (message && message.value) {
         const result = JSON.parse(message.value.toString());
-        // console.log(result);
-
         if (result.meta && result.payload) {
           const payload = result.payload;
           const {
