@@ -44,6 +44,9 @@ const run = async () => {
 
         if (result.meta && result.payload) {
           const payload = result.payload;
+          const {
+            t: { id }
+          } = gremlin.process;
           if (payload && payload.type === "node") {
             console.log("processing node", payload);
             const payloadId = payload.id;
@@ -60,9 +63,6 @@ const run = async () => {
               payload.after.labels.map(async label => {
                 const inserted = payload.after.properties;
                 console.log(label);
-                const {
-                  t: { id }
-                } = gremlin.process;
                 const v = g.addV(label);
                 const keys = Object.keys(inserted);
                 keys.map(key => {
