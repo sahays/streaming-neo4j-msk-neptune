@@ -2,11 +2,9 @@ const cdk = require("@aws-cdk/core");
 const {
   Instance,
   InstanceType,
-  LookupMachineImage,
-  SecurityGroup,
-  Protocol,
-  Port,
-  Peer
+  AmazonLinuxImage,
+  AmazonLinuxGeneration,
+  EbsDeviceVolumeType
 } = require("@aws-cdk/aws-ec2");
 const {
   Policy,
@@ -14,6 +12,8 @@ const {
   Effect,
   ManagedPolicy
 } = require("@aws-cdk/aws-iam");
+const { StartupScript } = require("./shared/startup-script");
+const { EmitOutput } = require("./shared/emit-output");
 
 class Neo4jStack extends cdk.Stack {
   S3Bucket;
@@ -23,40 +23,48 @@ class Neo4jStack extends cdk.Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    const { customVpc, neptuneCluster, instanceSg } = props;
+    const { setBootstrapperScript } = StartupScript();
+    const { emit } = EmitOutput();
+    const { neptuneStack, networkStack, mskStack } = props;
+    const { CustomVpc, InstanceSg } = networkStack;
+    const { NeptuneDBCluster } = neptuneStack;
+    const { MskRef } = mskStack;
 
-    const neo4jEc2 = this.createEc2(customVpc, instanceSg);
+    const neo4jEc2 = this.createEc2(CustomVpc, InstanceSg);
 
     const neptunePolicy = this.makeNeptunePolicy();
+    const mskInlinePolicy = this.makeMskInlinePolicy(MskRef);
+    this.attachIamPolicies(neo4jEc2, neptunePolicy, mskInlinePolicy);
 
-    this.attachIamPolicies(neo4jEc2, neptunePolicy);
-
-    this.setStartupScript(neo4jEc2, neptuneCluster);
-
+    setBootstrapperScript({
+      neo4jEc2: neo4jEc2,
+      neptuneCluster: NeptuneDBCluster,
+      neo4jPwd: this.node.tryGetContext("neo4j_pwd"),
+      neptunePort: this.node.tryGetContext("neptune_port"),
+      nodeTopic: this.node.tryGetContext("node_topic"),
+      relsTopic: this.node.tryGetContext("rels_topic")
+    });
     this.Neo4jEc2 = neo4jEc2;
+
+    emit(this, this.Neo4jEc2, neptuneStack, mskStack, networkStack);
   }
 
-  attachIamPolicies(neo4jEc2, neptunePolicy) {
-    // neo4jEc2.role.attachInlinePolicy(s3Policy);
+  attachIamPolicies(neo4jEc2, neptunePolicy, mskInlinePolicy) {
     neo4jEc2.role.attachInlinePolicy(neptunePolicy.inlinePolicy);
     neo4jEc2.role.addManagedPolicy(neptunePolicy.managedPolicy);
+    neo4jEc2.role.attachInlinePolicy(mskInlinePolicy);
   }
 
-  makeS3InlinePolicy(s3Bucket) {
-    const ec2S3Policy = new PolicyStatement({
+  makeMskInlinePolicy(mskClusterArn) {
+    const ec2MskPolicy = new PolicyStatement({
       effect: Effect.ALLOW
     });
-    ec2S3Policy.addActions("s3:*");
-    ec2S3Policy.addResources(s3Bucket.bucketArn);
+    ec2MskPolicy.addActions("kafka:DescribeCluster");
+    ec2MskPolicy.addActions("kafka:GetBootstrapBrokers");
+    ec2MskPolicy.addResources(mskClusterArn);
 
-    const ec2S3ObjectPolicy = new PolicyStatement({
-      effect: Effect.ALLOW
-    });
-    ec2S3ObjectPolicy.addActions("s3:*");
-    ec2S3ObjectPolicy.addResources(s3Bucket.bucketArn + "/*");
-
-    return new Policy(this, "ec2S3", {
-      statements: [ec2S3Policy, ec2S3ObjectPolicy]
+    return new Policy(this, "ec2Msk", {
+      statements: [ec2MskPolicy]
     });
   }
 
@@ -77,33 +85,6 @@ class Neo4jStack extends cdk.Stack {
     };
   }
 
-  setStartupScript(neo4jEc2, neptuneCluster) {
-    const output =
-      "sudo su root\n" +
-      "exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1 \n" +
-      "yum update -y\n";
-    neo4jEc2.addUserData(output);
-
-    const gremlinInstall =
-      "yum install unzip\n" +
-      "wget https://archive.apache.org/dist/tinkerpop/3.4.1/apache-tinkerpop-gremlin-console-3.4.1-bin.zip\n" +
-      "unzip apache-tinkerpop-gremlin-console-3.4.1-bin.zip\n" +
-      "cd apache-tinkerpop-gremlin-console-3.4.1\n" +
-      "wget https://www.amazontrust.com/repository/SFSRootCAG2.pem\n";
-    neo4jEc2.addUserData(gremlinInstall);
-
-    const neptuneConfig =
-      "cd conf\n" +
-      "touch neptune-remote.yaml\n" +
-      'echo "hosts: [' +
-      neptuneCluster.attrEndpoint +
-      ']" >> neptune-remote.yaml\n' +
-      'echo "port: 8182" >> neptune-remote.yaml\n' +
-      'echo "connectionPool: { enableSsl: true, trustCertChainFile: "SFSRootCAG2.pem"}" >> neptune-remote.yaml\n' +
-      'echo "serializer: { className: org.apache.tinkerpop.gremlin.driver.ser.GryoMessageSerializerV3d0, config: { serializeResultToString: true }}" >> neptune-remote.yaml\n';
-    neo4jEc2.addUserData(neptuneConfig);
-  }
-
   createEc2(customVpc, instanceSg) {
     const neo4jEc2 = new Instance(this, "neo4j", {
       vpc: customVpc,
@@ -111,10 +92,21 @@ class Neo4jStack extends cdk.Stack {
         this.node.tryGetContext("ec2_class"),
         this.node.tryGetContext("ec2_type")
       ),
-      machineImage: new LookupMachineImage({
-        name: this.node.tryGetContext("ami_name"),
-        owners: [this.node.tryGetContext("ami_owner")]
+      machineImage: new AmazonLinuxImage({
+        generation: AmazonLinuxGeneration.AMAZON_LINUX_2
       }),
+      blockDevices: [
+        {
+          deviceName: "/dev/xvda",
+          volume: {
+            ebsDevice: {
+              deleteOnTermination: true,
+              volumeSize: 50,
+              volumeType: EbsDeviceVolumeType.GP2
+            }
+          }
+        }
+      ],
       vpcSubnets: {
         subnets: customVpc.publicSubnets
       },

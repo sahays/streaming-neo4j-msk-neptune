@@ -1,11 +1,6 @@
 const cdk = require("@aws-cdk/core");
 const { SecurityGroup, Protocol, Port, Peer } = require("@aws-cdk/aws-ec2");
-const {
-  Vpc,
-  SubnetType,
-  Connections,
-  GatewayVpcEndpointAwsService
-} = require("@aws-cdk/aws-ec2");
+const { Vpc, SubnetType } = require("@aws-cdk/aws-ec2");
 
 class NetworkStack extends cdk.Stack {
   CustomVpc;
@@ -30,6 +25,21 @@ class NetworkStack extends cdk.Stack {
 
     this.InstanceSg = this.createInstanceSg(this.CustomVpc);
     this.MskSg = this.createMskSg(this.CustomVpc, this.InstanceSg);
+    // both ways
+    this.allowFromMsk();
+  }
+
+  allowFromMsk() {
+    this.InstanceSg.connections.allowFrom(
+      this.MskSg,
+      new Port({
+        protocol: Protocol.TCP,
+        fromPort: 0,
+        toPort: 65535,
+        stringRepresentation: "all ports from MSK"
+      }),
+      "from MSK"
+    );
   }
 
   createMskSg(customVpc, instanceSg) {

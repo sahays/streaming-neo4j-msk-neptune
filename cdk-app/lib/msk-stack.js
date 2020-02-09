@@ -1,17 +1,17 @@
 const cdk = require("@aws-cdk/core");
 const { CfnCluster } = require("@aws-cdk/aws-msk");
-const { SecurityGroup, Protocol, Port, Peer } = require("@aws-cdk/aws-ec2");
 
 class MskStack extends cdk.Stack {
   ClusterName;
-  Ref;
+  MskRef;
   Cluster;
   constructor(scope, id, props) {
     super(scope, id, props);
-    const { customVpc, mskSg } = props;
-    const cluster = this.createMskCluster(customVpc, mskSg);
+    const { networkStack } = props;
+    const { CustomVpc, MskSg } = networkStack;
+    const cluster = this.createMskCluster(CustomVpc, MskSg);
     this.ClusterName = cluster.clusterName;
-    this.Ref = cluster.ref;
+    this.MskRef = cluster.ref;
     this.Cluster = cluster;
   }
 

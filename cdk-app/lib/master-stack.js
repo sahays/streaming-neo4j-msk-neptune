@@ -5,10 +5,10 @@ class MasterStack extends cdk.Stack {
 
     const { neo4jStack, neptuneStack, networkStack, mskStack } = props;
 
-    this.emitNeo4jStackOutputs(neo4jStack);
-    this.emitNeptuneStackOutputs(neptuneStack);
-    this.emitNetworkStackOutputs(networkStack);
-    this.emitMskStackOutputs(mskStack);
+    // this.emitNeo4jStackOutputs(neo4jStack);
+    // this.emitNeptuneStackOutputs(neptuneStack);
+    // this.emitNetworkStackOutputs(networkStack);
+    // this.emitMskStackOutputs(mskStack);
   }
 
   emitMskStackOutputs(mskStack) {
