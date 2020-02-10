@@ -23,7 +23,7 @@ class Neo4jStack extends cdk.Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    const { setBootstrapperScript } = StartupScript();
+    const { setStartupScript } = StartupScript();
     const { emit } = EmitOutput();
     const { neptuneStack, networkStack, mskStack } = props;
     const { CustomVpc, InstanceSg } = networkStack;
@@ -36,13 +36,15 @@ class Neo4jStack extends cdk.Stack {
     const mskInlinePolicy = this.makeMskInlinePolicy(MskRef);
     this.attachIamPolicies(neo4jEc2, neptunePolicy, mskInlinePolicy);
 
-    setBootstrapperScript({
+    setStartupScript({
       neo4jEc2: neo4jEc2,
       neptuneCluster: NeptuneDBCluster,
       neo4jPwd: this.node.tryGetContext("neo4j_pwd"),
       neptunePort: this.node.tryGetContext("neptune_port"),
       nodeTopic: this.node.tryGetContext("node_topic"),
-      relsTopic: this.node.tryGetContext("rels_topic")
+      relsTopic: this.node.tryGetContext("rels_topic"),
+      mskCluster: MskRef,
+      region: process.env.CDK_DEFAULT_REGION
     });
     this.Neo4jEc2 = neo4jEc2;
 

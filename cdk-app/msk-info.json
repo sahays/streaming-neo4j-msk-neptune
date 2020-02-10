@@ -1,0 +1,5 @@
+{
+  "mskCluster": "arn:aws:kafka:us-west-2:865118636886:cluster/streaming-neo4j-neptune-cluster/2fcff8e7-0a29-4d34-985a-123c3f243e00-3",
+  "neo4jConfig": "/etc/test01.conf",
+  "region": "us-west-2"
+}

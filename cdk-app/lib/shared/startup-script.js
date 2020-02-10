@@ -7,10 +7,10 @@ const StartupScript = () => {
     neptuneCluster,
     neo4jPwd,
     neptunePort,
-    zookeeperConnections,
-    bootstrapServers,
+    mskCluster,
     nodeTopic,
-    relsTopic
+    relsTopic,
+    region
   }) => {
     const setupNeo4j = [
       "sudo su #",
@@ -55,8 +55,6 @@ const StartupScript = () => {
 
     const configureNeo4j = [
       "apoc.trigger.enabled=true",
-      "kafka.zookeeper.connect=" + zookeeperConnections,
-      "kafka.bootstrap.servers=" + bootstrapServers,
       "kafka.acks=all",
       "kafka.security.protocol=SSL",
       "kafka.ssl.truststore.location=/tmp/kafka.client.truststore.jks",
@@ -73,17 +71,28 @@ const StartupScript = () => {
     neo4jEc2.addUserData(echoAll);
     console.log(echoAll);
 
-    //restart neo4j
-    neo4jEc2.addUserData("systemctl restart neo4j");
-
     const setupDev = [
       "yum install nodejs -y",
       "yum install git -y",
-      "git clone https://github.com/sahays/streaming-neo4j-msk-neptune.git"
+      "git clone https://github.com/sahays/streaming-neo4j-msk-neptune.git",
+      "cd streaming-neo4j-msk-neptune/cdk-app",
+      "npm install",
+      "echo '" +
+        JSON.stringify({
+          mskCluster,
+          neo4jConfig: "/etc/neo4j/neo4j.conf",
+          region
+        }) +
+        "' >> msk-info.json",
+      "node neo4j-config-msk.js",
+      "cd /",
+      "cd streaming-neo4j-msk-neptune/kafka-consumer-app",
+      "npm install"
     ];
     neo4jEc2.addUserData(setupDev.join("\n"));
 
-    // download kafka consumer app
+    //restart neo4j
+    neo4jEc2.addUserData("systemctl restart neo4j\n");
   };
 
   const setBootstrapperScript = ({
