@@ -18,7 +18,7 @@ const run = async () => {
   const transformLine = (line) => {
     Object.keys(inputs).map((key) => {
       if (line.indexOf(key) > -1) {
-        line = line.replace("$$" + key, input[key]);
+        line = line.replace("$$" + key, inputs[key]);
       }
     });
     return line;
