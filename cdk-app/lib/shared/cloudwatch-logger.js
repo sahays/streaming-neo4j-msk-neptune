@@ -84,7 +84,7 @@ const CwLogger = (groupName, streamName) => {
   const debugLog = async (message) => {
     if (typeof message === "object") message = JSON.stringify(message);
     const result = await log(
-      "[DEBUG] " + message,
+      message,
       "[DEBUG]-" + streamName,
       sequenceToken.debug
     );
@@ -94,7 +94,7 @@ const CwLogger = (groupName, streamName) => {
   const errorLog = async (message) => {
     if (typeof message === "object") message = JSON.stringify(message);
     const result = await log(
-      "[ERROR] " + message,
+      message,
       "[ERROR]-" + streamName,
       sequenceToken.error
     );

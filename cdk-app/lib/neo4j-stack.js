@@ -23,7 +23,7 @@ class Neo4jStack extends cdk.Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    const { setStartupScript } = StartupScript();
+    const { setBootstrapperScript } = StartupScript();
     const { emit } = EmitOutput();
     const { neptuneStack, networkStack, mskStack } = props;
     const { CustomVpc, InstanceSg } = networkStack;
@@ -34,9 +34,15 @@ class Neo4jStack extends cdk.Stack {
 
     const neptunePolicy = this.makeNeptunePolicy();
     const mskInlinePolicy = this.makeMskInlinePolicy(MskRef);
-    this.attachIamPolicies(neo4jEc2, neptunePolicy, mskInlinePolicy);
+    const cwInlinePolicy = this.makeCloudwatchInlinePolicy();
+    this.attachIamPolicies(
+      neo4jEc2,
+      neptunePolicy,
+      mskInlinePolicy,
+      cwInlinePolicy
+    );
 
-    setStartupScript({
+    setBootstrapperScript({
       neo4jEc2: neo4jEc2,
       neptuneCluster: NeptuneDBCluster,
       neo4jPwd: this.node.tryGetContext("neo4j_pwd"),
@@ -51,10 +57,27 @@ class Neo4jStack extends cdk.Stack {
     emit(this, this.Neo4jEc2, neptuneStack, mskStack, networkStack);
   }
 
-  attachIamPolicies(neo4jEc2, neptunePolicy, mskInlinePolicy) {
+  attachIamPolicies(neo4jEc2, neptunePolicy, mskInlinePolicy, cwInlinePolicy) {
     neo4jEc2.role.attachInlinePolicy(neptunePolicy.inlinePolicy);
     neo4jEc2.role.addManagedPolicy(neptunePolicy.managedPolicy);
     neo4jEc2.role.attachInlinePolicy(mskInlinePolicy);
+    neo4jEc2.role.attachInlinePolicy(cwInlinePolicy);
+  }
+
+  makeCloudwatchInlinePolicy() {
+    const ec2CwPolicy = new PolicyStatement({
+      effect: Effect.ALLOW
+    });
+    ec2CwPolicy.addActions("cloudwatch:DescribeLogGroups");
+    ec2CwPolicy.addActions("cloudwatch:DescribeLogStreams");
+    ec2CwPolicy.addActions("cloudwatch:CreateLogStream");
+    ec2CwPolicy.addActions("cloudwatch:CreateLogGroup");
+    ec2CwPolicy.addActions("cloudwatch:PutLogEvents");
+    ec2CwPolicy.addResources("*");
+
+    return new Policy(this, "ec2Cloudwatch", {
+      statements: [ec2CwPolicy]
+    });
   }
 
   makeMskInlinePolicy(mskClusterArn) {

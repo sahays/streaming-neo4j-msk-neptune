@@ -24,8 +24,9 @@ const run = async () => {
       const zookeeperLine = "kafka.zookeeper.connect=" + zookeeper;
       const brokerLine = "kafka.bootstrap.servers=" + broker;
       const updatedFile = "\n" + zookeeperLine + "\n" + brokerLine + "\n";
-      debugLog(updatedFile);
+      await debugLog(updatedFile);
       fs.appendFileSync(fd, updatedFile, "utf8");
+      await debugLog(neo4jConfig + " file updated");
     } catch (err) {
       errorLog(err);
     }

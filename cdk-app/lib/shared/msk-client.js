@@ -8,7 +8,6 @@ const MskClient = (region) => {
           ClusterArn: mskClusterArn
         })
         .promise();
-      // console.log(result);
       if (result && result.ClusterInfo)
         return result.ClusterInfo.ZookeeperConnectString;
     } catch (err) {
@@ -23,7 +22,6 @@ const MskClient = (region) => {
           ClusterArn: mskClusterArn
         })
         .promise();
-      console.log(result);
       if (result) return result.BootstrapBrokerStringTls;
     } catch (err) {
       console.log(err);

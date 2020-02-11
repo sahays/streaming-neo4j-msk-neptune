@@ -100,8 +100,10 @@ const StartupScript = () => {
     neptuneCluster,
     neo4jPwd,
     neptunePort,
+    mskCluster,
     nodeTopic,
-    relsTopic
+    relsTopic,
+    region
   }) => {
     const bootstrap = [
       "sudo su #",
@@ -109,6 +111,9 @@ const StartupScript = () => {
       "yum update -y",
       "yum install nodejs -y",
       "yum install git -y",
+      "git clone https://github.com/sahays/streaming-neo4j-msk-neptune.git",
+      "cd streaming-neo4j-msk-neptune/",
+      "cd cdk-app/",
       "echo '" +
         JSON.stringify({
           neptuneEndpoint: neptuneCluster.attrEndpoint,
@@ -120,18 +125,13 @@ const StartupScript = () => {
         "' >> stream-blog-data.json",
       "echo '" +
         JSON.stringify({
-          repo: "https://github.com/sahays/streaming-neo4j-msk-neptune.git",
-          trustStore: "/tmp/kafka.client.truststore.jks",
-          gremlinPem: "https://www.amazontrust.com/repository/SFSRootCAG2.pem",
-          gremlinConsole:
-            "http://apache.mirrors.spacedump.net/tinkerpop/3.4.5/apache-tinkerpop-gremlin-console-3.4.5-bin.zip",
-          apoc:
-            "https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.0.0.2/apoc-4.0.0.2-all.jar",
-          javaCaCerts:
-            "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.222.b10-0.amzn2.0.1.x86_64/jre/lib/security/cacerts"
+          mskCluster,
+          neo4jConfig: "/etc/neo4j/neo4j.conf",
+          region
         }) +
-        "' >> stream-blog-uris.json",
-      "git clone https://github.com/sahays/streaming-neo4j-msk-neptune.git"
+        "' >> msk-info.json",
+      "npm install",
+      "node ./lib/shared/run-shell-commands.js"
     ];
     neo4jEc2.addUserData(bootstrap.join("\n"));
   };
