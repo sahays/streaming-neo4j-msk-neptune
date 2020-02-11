@@ -29,7 +29,9 @@ const run = () => {
     const lines = content.split("\n");
     const runLine = (line) => {
       try {
-        if (line.startsWith("##")) {
+        if (line.length === 0) {
+          log("<empty line/>");
+        } else if (line.startsWith("##")) {
           log(line);
         } else if (line.indexOf("$$") > -1) {
           line = transformLine(line);
