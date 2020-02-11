@@ -1,5 +1,4 @@
 ## setting up the instance
-sudo su #
 yum update -y
 rpm --import https://debian.neo4j.com/neotechnology.gpg.key
 echo "[neo4j]" >> /etc/yum.repos.d/neo4j.repo

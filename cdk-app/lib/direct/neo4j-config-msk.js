@@ -1,5 +1,5 @@
-const { MskClient } = require("./lib/shared/msk-client");
-const { CwLogger } = require("./lib/shared/cloudwatch-logger");
+const { MskClient } = require("../utils/msk-client");
+const { CwLogger } = require("../utils/cloudwatch-logger");
 const fs = require("fs");
 
 const run = async () => {

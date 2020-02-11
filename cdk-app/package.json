@@ -8,7 +8,7 @@
     "build": "echo \"The build step is not required when using JavaScript!\" && exit 0",
     "cdk": "cdk",
     "test": "jest",
-    "deploy": "cdk deploy *-stack && node after-deploy.js",
+    "deploy": "cdk deploy *-stack && node ./lib/direct/after-deploy.js",
     "update": "cdk deploy *-stack",
     "destroy": "cdk destroy *-stack"
   },
@@ -25,6 +25,8 @@
     "@aws-cdk/aws-s3": "^1.20.0",
     "@aws-cdk/core": "^1.20.0",
     "minimist": "^1.2.0",
-    "shelljs": "^0.8.3"
+    "shelljs": "^0.8.3",
+    "winston": "^3.2.1",
+    "winston-cloudwatch": "^2.3.0"
   }
 }

@@ -77,7 +77,7 @@ const CwLogger = (groupName, streamName) => {
         .promise();
       return result;
     } catch (e) {
-      console.log(message, logStreamName, token, e);
+      console.log("error", message, logStreamName);
     }
   };
 

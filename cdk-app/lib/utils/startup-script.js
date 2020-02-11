@@ -109,11 +109,11 @@ const StartupScript = () => {
       "sudo su #",
       "cd /",
       "yum update -y",
+      "curl --silent --location https://rpm.nodesource.com/setup_12.x | bash -",
       "yum install nodejs -y",
       "yum install git -y",
       "git clone https://github.com/sahays/streaming-neo4j-msk-neptune.git",
-      "cd streaming-neo4j-msk-neptune/",
-      "cd cdk-app/",
+      "cd streaming-neo4j-msk-neptune/cdk-app/",
       "echo '" +
         JSON.stringify({
           neptuneEndpoint: neptuneCluster.attrEndpoint,

@@ -68,11 +68,11 @@ class Neo4jStack extends cdk.Stack {
     const ec2CwPolicy = new PolicyStatement({
       effect: Effect.ALLOW
     });
-    ec2CwPolicy.addActions("cloudwatch:DescribeLogGroups");
-    ec2CwPolicy.addActions("cloudwatch:DescribeLogStreams");
-    ec2CwPolicy.addActions("cloudwatch:CreateLogStream");
-    ec2CwPolicy.addActions("cloudwatch:CreateLogGroup");
-    ec2CwPolicy.addActions("cloudwatch:PutLogEvents");
+    ec2CwPolicy.addActions("logs:DescribeLogGroups");
+    ec2CwPolicy.addActions("logs:DescribeLogStreams");
+    ec2CwPolicy.addActions("logs:CreateLogStream");
+    ec2CwPolicy.addActions("logs:CreateLogGroup");
+    ec2CwPolicy.addActions("logs:PutLogEvents");
     ec2CwPolicy.addResources("*");
 
     return new Policy(this, "ec2Cloudwatch", {

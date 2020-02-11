@@ -2,17 +2,17 @@ const shell = require("shelljs");
 const source = "./shell-commands.sh";
 const vars = "./stream-blog-data.json";
 const fs = require("fs");
-const readline = require("readline");
-const { CwLogger } = require("./lib/shared/cloudwatch-logger");
-const { initLogger, debugLog, errorLog } = CwLogger(
-  "stream-neo4j-neptune-blog",
-  "run-shell-commands-" + Date.now()
-);
+const log = (message) =>
+  fs.appendFileSync("run-shell-commands.log", message + "\n");
 
-const run = async () => {
+const run = () => {
   let inputs;
+
   if (fs.existsSync(vars)) {
     inputs = JSON.parse(fs.readFileSync(vars));
+    console.log(inputs);
+  } else {
+    console.log(vars + " doesn't exist");
   }
 
   const transformLine = (line) => {
@@ -25,34 +25,38 @@ const run = async () => {
   };
 
   if (fs.existsSync(source)) {
-    await initLogger();
-    const readInterface = readline.createInterface({
-      input: fs.createReadStream(source),
-      console: false
-    });
-    readInterface.on("line", async (line) => {
+    const content = fs.readFileSync(source, "utf-8");
+    const lines = content.split("\n");
+    const runLine = (line) => {
       try {
         if (line.startsWith("##")) {
-          await debugLog(line);
+          log(line);
         } else if (line.indexOf("$$") > -1) {
           line = transformLine(line);
           shell.exec(line);
+          log("transformed " + line);
         } else {
           shell.exec(line);
+          log("executed " + line);
         }
-        await debugLog("executed " + line);
       } catch (e) {
-        await errorLog("error executing: " + line);
+        log("[ERROR] executing: " + line);
       }
-    });
+    };
+
+    lines.map((line) => runLine(line));
   } else {
-    errorLog("source: " + source + " doesn't exist");
+    log("[ERROR] source: " + source + " doesn't exist");
   }
 };
 
-try {
-  run();
-} catch (e) {
-  errorLog("unhandled exception");
-  errorLog(e);
-}
+const main = async () => {
+  try {
+    run();
+    log("complete");
+  } catch (e) {
+    log("[Error]: " + JSON.stringify(e));
+  }
+};
+
+main();
