@@ -35,8 +35,10 @@ const run = async () => {
         await debugLog(line);
       } else if (line.indexOf("$$") > -1) {
         line = transformLine(line);
+        shell.exec(line);
+      } else {
+        shell.exec(line);
       }
-      shell.exec(line);
       await debugLog("executed " + line);
     });
   } else {
