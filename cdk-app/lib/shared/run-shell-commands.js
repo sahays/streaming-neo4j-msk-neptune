@@ -31,15 +31,19 @@ const run = async () => {
       console: false
     });
     readInterface.on("line", async (line) => {
-      if (line.startsWith("##")) {
-        await debugLog(line);
-      } else if (line.indexOf("$$") > -1) {
-        line = transformLine(line);
-        shell.exec(line);
-      } else {
-        shell.exec(line);
+      try {
+        if (line.startsWith("##")) {
+          await debugLog(line);
+        } else if (line.indexOf("$$") > -1) {
+          line = transformLine(line);
+          shell.exec(line);
+        } else {
+          shell.exec(line);
+        }
+        await debugLog("executed " + line);
+      } catch (e) {
+        await debugLog("error executing: " + line);
       }
-      await debugLog("executed " + line);
     });
   } else {
     errorLog("source: " + source + " doesn't exist");
