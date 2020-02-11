@@ -42,7 +42,7 @@ const run = async () => {
         }
         await debugLog("executed " + line);
       } catch (e) {
-        await debugLog("error executing: " + line);
+        await errorLog("error executing: " + line);
       }
     });
   } else {
