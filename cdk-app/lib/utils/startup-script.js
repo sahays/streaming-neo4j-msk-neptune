@@ -136,7 +136,25 @@ const StartupScript = () => {
     neo4jEc2.addUserData(bootstrap.join("\n"));
   };
 
-  return { setStartupScript, setBootstrapperScript };
+  const setupDockerScript = () => {
+    // install docker
+    // create dockerfile
+    // create docker-compose
+    // run docker-compose up
+    const bootstrap = [
+      "sudo su #",
+      "cd /",
+      "yum update -y",
+      "amazon-linux-extras install docker",
+      "service docker start",
+      "usermod -a -G docker ec2-user",
+      "docker info",
+      "wget --directory-prefix=neo4j-docker https://raw.githubusercontent.com/neo4j/docker-neo4j-publish/99d2f403da30850cfd2b7d04acd484b168ef6cb1/4.0.0/community/Dockerfile"
+    ];
+    neo4jEc2.addUserData(bootstrap.join("\n"));
+  };
+
+  return { setStartupScript, setBootstrapperScript, setupDockerScript };
 };
 
 module.exports = { StartupScript };

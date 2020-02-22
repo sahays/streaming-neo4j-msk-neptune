@@ -15,7 +15,7 @@ const {
 const { StartupScript } = require("./shared/startup-script");
 const { EmitOutput } = require("./shared/emit-output");
 
-class Neo4jStack extends cdk.Stack {
+class Ec2Stack extends cdk.Stack {
   S3Bucket;
   S3bucketPolicy;
   Neo4jEc2;
@@ -52,6 +52,7 @@ class Neo4jStack extends cdk.Stack {
       mskCluster: MskRef,
       region: process.env.CDK_DEFAULT_REGION
     });
+
     this.Neo4jEc2 = neo4jEc2;
 
     emit(this, this.Neo4jEc2, neptuneStack, mskStack, networkStack);
@@ -142,4 +143,4 @@ class Neo4jStack extends cdk.Stack {
   }
 }
 
-module.exports = { Neo4jStack };
+module.exports = { Ec2Stack };
