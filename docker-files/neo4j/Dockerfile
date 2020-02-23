@@ -13,24 +13,22 @@ RUN yum install wget which -y \
     && amazon-linux-extras enable java-openjdk11 \
     && yum install java-11-openjdk -y 
 
-# RUN export JAVA_HOME="$(dirname $(dirname $(readlink -f $(which java))))"
+RUN export JAVA_HOME="$(readlink -f /usr/bin/java | sed 's:bin/java::')"
 
-RUN echo "$(readlink -f /usr/bin/java | sed 's:bin/java::')lib/security/cacerts"
+RUN yum install neo4j-4.0.0 -y \
+    && echo NEO4J_ULIMIT_NOFILE=60000 >> /etc/default/neo4j \
+    && echo apoc.export.file.enabled=true >> /etc/neo4j/neo4j.conf \
+    && echo dbms.security.procedures.unrestricted=apoc.* >> /etc/neo4j/neo4j.conf \
+    && neo4j-admin set-initial-password  pass@word1 \
+    && wget --directory-prefix /var/lib/neo4j/plugins/ https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.0.0.2/apoc-4.0.0.2-all.jar \
+    && cp "${JAVA_HOME}"/jre/lib/security/cacerts /tmp/kafka.client.truststore.jks
 
-# RUN yum install neo4j-4.0.0 -y \
-#     && echo NEO4J_ULIMIT_NOFILE=60000 >> /etc/default/neo4j \
-#     && echo apoc.export.file.enabled=true >> /etc/neo4j/neo4j.conf \
-#     && echo dbms.security.procedures.unrestricted=apoc.* >> /etc/neo4j/neo4j.conf \
-#     && neo4j-admin set-initial-password  pass@word1 \
-#     && wget --directory-prefix /var/lib/neo4j/plugins/ https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.0.0.2/apoc-4.0.0.2-all.jar \
-#     && cp "${JAVA_HOME}"/jre/lib/security/cacerts /tmp/kafka.client.truststore.jks
+ENV PATH "${NEO4J_HOME}"/bin:$PATH
 
-# ENV PATH "${NEO4J_HOME}"/bin:$PATH
+WORKDIR "${NEO4J_HOME}"
 
-# WORKDIR "${NEO4J_HOME}"
+VOLUME /data /logs
 
-# VOLUME /data /logs
+EXPOSE 7474 7473 7687
 
-# EXPOSE 7474 7473 7687
-
-# CMD ["neo4j"]
+CMD ["neo4j"]
