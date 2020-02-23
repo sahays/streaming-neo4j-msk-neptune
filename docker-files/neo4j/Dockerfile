@@ -10,8 +10,6 @@ ARG NEO4J_URI=https://dist.neo4j.org/neo4j-community-4.0.0-unix.tar.gz
 
 RUN addgroup --system neo4j && adduser --system --no-create-home --home "${NEO4J_HOME}" --ingroup neo4j neo4j
 
-# COPY ./local-package/* /tmp/
-
 RUN apt update \
     && apt install -y curl wget gosu jq \
     && curl -L --fail --silent --show-error "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini" > /sbin/tini \
@@ -32,8 +30,6 @@ RUN apt update \
     && chmod -R 777 "${NEO4J_HOME}" \
     && ln -s /data "${NEO4J_HOME}"/data \
     && ln -s /logs "${NEO4J_HOME}"/logs \
-    # && mv /tmp/neo4jlabs-plugins.json /neo4jlabs-plugins.json \
-    # && rm -rf /tmp/* \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get -y purge --auto-remove curl
 
@@ -43,9 +39,8 @@ WORKDIR "${NEO4J_HOME}"
 
 VOLUME /data /logs
 
-# COPY docker-entrypoint.sh /docker-entrypoint.sh
-
 EXPOSE 7474 7473 7687
 
-# ENTRYPOINT ["/sbin/tini", "-g", "--", "/docker-entrypoint.sh"]
 CMD ["neo4j"]
+
+# docker container run --publish 7474:7474 --publish 7473:7473 --publish 7687:7687 --detach --name neo neo4jv4:1.0

@@ -141,17 +141,23 @@ const StartupScript = () => {
     // create dockerfile
     // create docker-compose
     // run docker-compose up
-    const bootstrap = [
+    const installDocker = [
       "sudo su #",
       "cd /",
       "yum update -y",
       "amazon-linux-extras install docker",
       "service docker start",
       "usermod -a -G docker ec2-user",
-      "docker info",
-      "wget --directory-prefix=neo4j-docker https://raw.githubusercontent.com/neo4j/docker-neo4j-publish/99d2f403da30850cfd2b7d04acd484b168ef6cb1/4.0.0/community/Dockerfile"
+      "docker info"
     ];
-    neo4jEc2.addUserData(bootstrap.join("\n"));
+    neo4jEc2.addUserData(installDocker.join("\n"));
+
+    const installDockerCompose = [
+      'curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose',
+      "chmod +x /usr/local/bin/docker-compose",
+      "ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose"
+    ];
+    neo4jEc2.addUserData(installDockerCompose.join("\n"));
   };
 
   return { setStartupScript, setBootstrapperScript, setupDockerScript };

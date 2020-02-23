@@ -1,0 +1,11 @@
+version: "1"
+services:
+  neo4j:
+    build: ./neo4j
+    ports:
+      - "7474:7474"
+      - "7473:7473"
+      - "7687:7687"
+    volumes:
+      - /logs:/logs
+      - /data:/data
