@@ -2,7 +2,7 @@ FROM amazonlinux:2
 
 # ENV NEO4J_HOME="/var/lib/neo4j"
 
-RUN alternatives --config java
+RUN which java
 
 # RUN yum install wget -y \
 #     && rpm --import https://debian.neo4j.com/neotechnology.gpg.key \
