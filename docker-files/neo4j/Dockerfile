@@ -2,7 +2,7 @@ FROM amazonlinux:2
 
 ENV NEO4J_HOME="/var/lib/neo4j"
 
-RUN yum install wget -y \
+RUN yum install wget which -y \
     && rpm --import https://debian.neo4j.com/neotechnology.gpg.key \
     && echo [neo4j] >> /etc/yum.repos.d/neo4j.repo \
     && echo name=Neo4j RPM Repository >> /etc/yum.repos.d/neo4j.repo \
