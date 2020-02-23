@@ -13,7 +13,9 @@ RUN yum install wget which -y \
     && amazon-linux-extras enable java-openjdk11 \
     && yum install java-11-openjdk -y 
 
-RUN export JAVA_HOME="$(readlink -f /usr/bin/java | sed 's:bin/java::')"
+ENV JAVA_HOME="$(readlink -f /usr/bin/java | sed 's:bin/java::')"
+
+RUN echo "${JAVA_HOME}"
 
 RUN yum install neo4j-4.0.0 -y \
     && echo NEO4J_ULIMIT_NOFILE=60000 >> /etc/default/neo4j \
