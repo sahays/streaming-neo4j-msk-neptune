@@ -1,14 +1,14 @@
-FROM amazoncorretto
+FROM amazonlinux:2
 
 ENV NEO4J_HOME="/var/lib/neo4j"
 
-RUN yum update -y \
-    && rpm --import https://debian.neo4j.com/neotechnology.gpg.key \
+RUN rpm --import https://debian.neo4j.com/neotechnology.gpg.key \
     && echo [neo4j] >> /etc/yum.repos.d/neo4j.repo \
     && echo name=Neo4j RPM Repository >> /etc/yum.repos.d/neo4j.repo \
     && echo baseurl=https://yum.neo4j.com/stable >> /etc/yum.repos.d/neo4j.repo \
     && echo enabled=1 >> /etc/yum.repos.d/neo4j.repo \
     && echo gpgcheck=1 >> /etc/yum.repos.d/neo4j.repo \
+    && amazon-linux-extras enable java-openjdk11 \
     && yum install neo4j-4.0.0 -y \
     && echo NEO4J_ULIMIT_NOFILE=60000 >> /etc/default/neo4j \
     && echo apoc.export.file.enabled=true >> /etc/neo4j/neo4j.conf \
