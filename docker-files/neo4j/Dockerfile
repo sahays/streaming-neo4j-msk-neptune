@@ -15,7 +15,7 @@ RUN yum install wget which -y \
 
 # RUN export JAVA_HOME="$(dirname $(dirname $(readlink -f $(which java))))"
 
-RUN echo '$(readlink -f /usr/bin/java | sed "s:bin/java::")lib/security/cacerts'
+RUN echo "${(readlink -f /usr/bin/java | sed 's:bin/java::')lib/security/cacerts}"
 
 # RUN yum install neo4j-4.0.0 -y \
 #     && echo NEO4J_ULIMIT_NOFILE=60000 >> /etc/default/neo4j \
