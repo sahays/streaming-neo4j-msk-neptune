@@ -41,6 +41,6 @@ VOLUME /data /logs
 
 EXPOSE 7474 7473 7687
 
-CMD ["neo4j"]
+CMD ["neo4j-docker"]
 
 # docker container run --publish 7474:7474 --publish 7473:7473 --publish 7687:7687 --detach --name neo neo4jv4:1.0
