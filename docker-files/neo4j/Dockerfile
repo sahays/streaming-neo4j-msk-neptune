@@ -3,7 +3,7 @@ FROM amazonlinux:2
 # ENV NEO4J_HOME="/var/lib/neo4j"
 
 RUN amazon-linux-extras enable java-openjdk11 \
-    && yum install java-11-openjdk \
+    && yum install java-11-openjdk -y \
     && alternatives --config java
 
 # RUN yum install wget -y \
