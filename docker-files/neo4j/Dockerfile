@@ -12,7 +12,7 @@ RUN yum install wget -y \
     && amazon-linux-extras enable java-openjdk11 \
     && yum install java-11-openjdk -y 
 
-ENV JAVA_HOME="\$(dirname \$(dirname \$(readlink \$(readlink \$(which javac)))))"
+ENV JAVA_HOME="{\$(dirname \$(dirname \$(readlink \$(readlink \$(which javac)))))}"
 
 RUN echo "${JAVA_HOME}"
 
