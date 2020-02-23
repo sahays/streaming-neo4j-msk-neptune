@@ -1,6 +1,7 @@
 FROM amazonlinux:2
 
 ENV NEO4J_HOME="/var/lib/neo4j"
+ENV JAVA_HOME="/usr/java/latest"
 
 RUN yum install wget which -y \
     && rpm --import https://debian.neo4j.com/neotechnology.gpg.key \
@@ -12,9 +13,9 @@ RUN yum install wget which -y \
     && amazon-linux-extras enable java-openjdk11 \
     && yum install java-11-openjdk -y 
 
-RUN export JAVA_HOME="$(dirname $(dirname $(readlink -f $(which java))))"
+# RUN export JAVA_HOME="$(dirname $(dirname $(readlink -f $(which java))))"
 
-RUN echo "${JAVA_HOME}"
+RUN echo "$(readlink -f /usr/bin/java | sed \"s:bin/java::\")lib/security/cacerts"
 
 # RUN yum install neo4j-4.0.0 -y \
 #     && echo NEO4J_ULIMIT_NOFILE=60000 >> /etc/default/neo4j \
