@@ -1,3 +1,3 @@
-FROM tinkerpop/gremlin-console
+FROM tinkerpop/gremlin-console:3.4.5
 
-RUN ls bin/conf
+RUN ls ${GREMLIN_CONSOLE_DIR}
