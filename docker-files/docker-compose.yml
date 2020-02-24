@@ -10,6 +10,6 @@ services:
       - /logs:/logs
       - /data:/data
   gremlin_console:
-    build: ./gremlin_console
+    build: ./gremlin-console
     ports:
       - 8080:8080
