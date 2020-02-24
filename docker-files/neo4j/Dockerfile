@@ -16,9 +16,7 @@ RUN wget --directory-prefix ${NEO4J_HOME}/plugins/ https://github.com/neo4j-cont
     && echo "streams.procedures.enabled=true" >>  ${NEO4J_HOME}/conf/neo4j.conf \
     && echo "dbms.jvm.additional=-Djavax.net.debug=ssl:handshake" >>  ${NEO4J_HOME}/conf/neo4j.conf \
     && neo4j-admin set-initial-password pass@word1 \
-    && cp ${JAVA_HOME}/lib/security/cacerts /tmp/kafka.client.truststore.jks \
-    && cat /tmp/kafka.client.truststore.jks \
-    && cat ${NEO4J_HOME}/conf/neo4j.conf
+    && cp ${JAVA_HOME}/lib/security/cacerts /tmp/kafka.client.truststore.jks 
 
 EXPOSE 7473 7474 7687
 
