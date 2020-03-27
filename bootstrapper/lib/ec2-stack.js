@@ -12,8 +12,9 @@ const {
   Effect,
   ManagedPolicy
 } = require("@aws-cdk/aws-iam");
-const { StartupScript } = require("./shared/startup-script");
-const { EmitOutput } = require("./shared/emit-output");
+const { StartupScript } = require("./utils/startup-script");
+const { EmitOutput } = require("./utils/emit-output");
+const { fileToJson } = require("./utils/read-file");
 
 class Ec2Stack extends cdk.Stack {
   S3Bucket;
@@ -23,7 +24,7 @@ class Ec2Stack extends cdk.Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    const { setBootstrapperScript } = StartupScript();
+    const { setupDockerScript } = StartupScript();
     const { emit } = EmitOutput();
     const { neptuneStack, networkStack, mskStack } = props;
     const { CustomVpc, InstanceSg } = networkStack;
@@ -32,37 +33,49 @@ class Ec2Stack extends cdk.Stack {
 
     const neo4jEc2 = this.createEc2(CustomVpc, InstanceSg);
 
+    const constants = JSON.parse(process.env.CONSTANTS);
+
     const neptunePolicy = this.makeNeptunePolicy();
     const mskInlinePolicy = this.makeMskInlinePolicy(MskRef);
-    const cwInlinePolicy = this.makeCloudwatchInlinePolicy();
-    this.attachIamPolicies(
-      neo4jEc2,
-      neptunePolicy,
-      mskInlinePolicy,
-      cwInlinePolicy
-    );
+    this.attachIamPolicies(neo4jEc2, neptunePolicy, mskInlinePolicy);
 
-    setBootstrapperScript({
-      neo4jEc2: neo4jEc2,
-      neptuneCluster: NeptuneDBCluster,
-      neo4jPwd: this.node.tryGetContext("neo4j_pwd"),
-      neptunePort: this.node.tryGetContext("neptune_port"),
-      nodeTopic: this.node.tryGetContext("node_topic"),
-      relsTopic: this.node.tryGetContext("rels_topic"),
-      mskCluster: MskRef,
-      region: process.env.CDK_DEFAULT_REGION
-    });
+    const info = fileToJson("EC2Configuration.json.env");
+
+    setupDockerScript(info);
+
+    // process.env.STARTUP_INFO = JSON.stringify({
+    //   neo4jEc2: neo4jEc2,
+    //   neptuneCluster: NeptuneDBCluster,
+    //   neo4jPwd: constants.password,
+    //   neptunePort: constants.neptunePort,
+    //   nodeTopic: this.node.tryGetContext("node_topic"),
+    //   relsTopic: this.node.tryGetContext("rels_topic"),
+    //   mskCluster: MskRef,
+    //   region: process.env.CDK_DEFAULT_REGION
+    // });
+
+    // setupDockerScript();
+
+    // setBootstrapperScript({
+    //   neo4jEc2: neo4jEc2,
+    //   neptuneCluster: NeptuneDBCluster,
+    //   neo4jPwd: this.node.tryGetContext("neo4j_pwd"),
+    //   neptunePort: this.node.tryGetContext("neptune_port"),
+    //   nodeTopic: this.node.tryGetContext("node_topic"),
+    //   relsTopic: this.node.tryGetContext("rels_topic"),
+    //   mskCluster: MskRef,
+    //   region: process.env.CDK_DEFAULT_REGION
+    // });
 
     this.Neo4jEc2 = neo4jEc2;
 
     emit(this, this.Neo4jEc2, neptuneStack, mskStack, networkStack);
   }
 
-  attachIamPolicies(neo4jEc2, neptunePolicy, mskInlinePolicy, cwInlinePolicy) {
+  attachIamPolicies(neo4jEc2, neptunePolicy, mskInlinePolicy) {
     neo4jEc2.role.attachInlinePolicy(neptunePolicy.inlinePolicy);
     neo4jEc2.role.addManagedPolicy(neptunePolicy.managedPolicy);
     neo4jEc2.role.attachInlinePolicy(mskInlinePolicy);
-    neo4jEc2.role.attachInlinePolicy(cwInlinePolicy);
   }
 
   makeCloudwatchInlinePolicy() {

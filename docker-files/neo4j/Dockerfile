@@ -1,14 +1,23 @@
 FROM neo4j:4.0.0
 
 ENV NEO4J_AUTH=neo4j/pass@word1
+ENV NODE_TOPIC=node_topic
+ENV RELS_TOPIC=rels_topic
+ENV ZOOKEEPER_CONNECT=""
+ENV BOOTSTRAP_SERVERS=""
 
-RUN wget --directory-prefix ${NEO4J_HOME}/plugins/ https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.0.0.2/apoc-4.0.0.2-all.jar \
-    && echo "apoc.export.file.enabled=true" >> ${NEO4J_HOME}/conf/neo4j.conf \
+RUN wget --directory-prefix ${NEO4J_HOME}/plugins/ https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.0.0.2/apoc-4.0.0.2-all.jar 
+
+RUN echo "apoc.export.file.enabled=true" >> ${NEO4J_HOME}/conf/neo4j.conf \
     && echo "dbms.security.procedures.unrestricted=apoc.*" >>  ${NEO4J_HOME}/conf/neo4j.conf \
     && echo "apoc.trigger.enabled=true" >>  ${NEO4J_HOME}/conf/neo4j.conf \
     && echo "kafka.acks=all" >>  ${NEO4J_HOME}/conf/neo4j.conf \
     && echo "kafka.security.protocol=SSL" >>  ${NEO4J_HOME}/conf/neo4j.conf \
+    && echo "kafka.zookeeper.connect=`${ZOOKEEPER_CONNECT}`" >>  ${NEO4J_HOME}/conf/neo4j.conf \
+    && echo "kafka.bootstrap.servers=`${BOOTSTRAP_SERVERS}`" >>  ${NEO4J_HOME}/conf/neo4j.conf \
     && echo "kafka.ssl.truststore.location=/tmp/kafka.client.truststore.jks" >>  ${NEO4J_HOME}/conf/neo4j.conf \
+    && echo "streams.source.topic.nodes.`${NODE_TOPIC}`=Person{*}" \
+    && echo "streams.source.topic.relationships.`${RELS_TOPIC}`=ACTED_IN{*}" \
     && echo "streams.sink.enabled=false" >>  ${NEO4J_HOME}/conf/neo4j.conf \
     && echo "streams.source.topic.nodes.PersonTopic=Person{*}" >>  ${NEO4J_HOME}/conf/neo4j.conf \
     && echo "streams.source.topic.relationships.RelsTopic=ACTED_IN{*}" >>  ${NEO4J_HOME}/conf/neo4j.conf \

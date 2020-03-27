@@ -32,27 +32,18 @@ class NeptuneStack extends cdk.Stack {
 
     this.NeptuneDBCluster = this.createNeptuneCluster(customVpc);
     this.createNeptuneTrustedS3Role();
-    // this.emitOutput();
+    this.emitOutput();
   }
 
   emitOutput() {
-    const output = new Output();
-    const data = output.load();
-    data.NeptuneDbClusterIdentifier = this.NeptuneDBClusterIdentifier;
-    data.GremlinEndpoint =
-      "http://" +
-      this.NeptuneDBCluster.attrEndpoint +
-      ":" +
-      this.NeptunePort +
-      "/gremlin";
-    data.LoaderEndpoint =
-      "http://" +
-      this.NeptuneDBCluster.attrEndpoint +
-      ":" +
-      this.NeptunePort +
-      "/loader";
-    data.NeptuneTrustedRole = this.NeptuneTrustedRoleName;
-    output.write(data);
+    new cdk.CfnOutput(this, "NeptuneTrustedRole", {
+      value: this.NeptuneTrustedRoleArn,
+      description: "Neptune cluster IAM role"
+    });
+    new cdk.CfnOutput(this, "NeptuneDBClusterIdentifier", {
+      value: this.NeptuneDBClusterIdentifier,
+      description: "Neptune cluster identifier"
+    });
   }
 
   createNeptuneTrustedS3Role() {
