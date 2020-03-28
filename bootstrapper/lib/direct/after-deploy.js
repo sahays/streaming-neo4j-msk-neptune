@@ -3,8 +3,10 @@ const { overwriteFile } = require("../utils/write-file");
 const { addNeptuneIamRole } = require("./neptune-add-role");
 const { getMskConnectionString } = require("./msk-connection-string");
 
-const describeNeptuneStack = fileToJson("streaming-blog-neptune-stack.json");
-const describeMskStack = fileToJson("streaming-blog-msk-stack.json");
+const describeNeptuneStack = fileToJson(
+  "streaming-blog-neptune-stack.json.env"
+);
+const describeMskStack = fileToJson("streaming-blog-msk-stack.json.env");
 const neptuneStack = describeNeptuneStack.Stacks[0];
 const mskStack = describeMskStack.Stacks[0];
 const neptuneClusterEnpoint = neptuneStack.Outputs[0].OutputValue;
@@ -25,7 +27,7 @@ const getConnectionStrings = async () => {
     region: awsRegion
   });
   overwriteFile(
-    "EC2Configuration.json",
+    "EC2Configuration.json.env",
     JSON.stringify({
       connectionStrings,
       neptuneClusterIdentifier,

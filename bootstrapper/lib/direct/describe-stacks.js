@@ -15,8 +15,14 @@ const describeStack = async () => {
     const mskStackJson = await cfn
       .describeStacks({ StackName: "streaming-blog-msk-stack" })
       .promise();
-    overwriteFile("streaming-blog-neptune-stack.json", neptuneStackJson);
-    overwriteFile("streaming-blog-msk-stack.json", mskStackJson);
+    overwriteFile(
+      "streaming-blog-neptune-stack.json.env",
+      JSON.stringify(neptuneStackJson)
+    );
+    overwriteFile(
+      "streaming-blog-msk-stack.json.env",
+      JSON.stringify(mskStackJson)
+    );
   } catch (e) {
     console.log(e);
   }
