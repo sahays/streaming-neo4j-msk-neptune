@@ -1,8 +1,8 @@
 FROM neo4j:4.0.0
 
 ENV NEO4J_AUTH=neo4j/pass@word1
-ENV NODE_TOPIC=node_topic
-ENV RELS_TOPIC=rels_topic
+ENV NODE_TOPIC="node_topic"
+ENV RELS_TOPIC="rels_topic"
 ENV ZOOKEEPER_CONNECT=""
 ENV BOOTSTRAP_SERVERS=""
 

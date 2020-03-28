@@ -1,8 +1,8 @@
 // Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: MIT-0
 
-const StartupScript = () => {
-  const setupDockerScript = (info) => {
+const UserDataScript = () => {
+  const setupDockerScript = () => {
     const installDocker = [
       "sudo su #",
       "cd /",
@@ -21,22 +21,11 @@ const StartupScript = () => {
     ];
     neo4jEc2.addUserData(installDockerCompose.join("\n"));
 
-    const setEnvVars = [
-      "export NODE_TOPIC=",
-      "export RELS_TOPIC=",
-      "export ZOOKEEPER_CONNECT=",
-      "export BOOTSTRAP_SERVERS="
-    ];
-    neo4jEc2.addUserData(setEnvVars.join("\n"));
-
-    const runContainers = [
-      "docker run -dt sanjeets/neo4j-400-stream-enabled:1",
-      "docker run -dt sanjeets/kafka-consumer-app"
-    ];
-    neo4jEc2.addUserData(runContainers.join("\n"));
+    const runAfterDeploy = [""];
+    neo4jEc2.addUserData(runAfterDeploy.join("\n"));
   };
 
   return { setupDockerScript };
 };
 
-module.exports = { StartupScript };
+module.exports = { UserDataScript };

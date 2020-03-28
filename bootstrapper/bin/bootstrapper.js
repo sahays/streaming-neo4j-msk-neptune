@@ -46,5 +46,3 @@ const ec2Stack = new Ec2Stack(app, "streaming-blog-ec2-stack", {
 });
 
 overwriteFile("StackInfo.json.env", JSON.stringify(defaultEnv));
-
-// "deploy": "cdk deploy streaming-blog-network-stack && cdk deploy streaming-blog-neptune-stack && cdk deploy streaming-blog-msk-stack && node ./lib/direct/before-ec2-deploy.js && cdk deploy streaming-blog-ec2-stack",
