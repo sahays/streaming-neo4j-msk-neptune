@@ -1,8 +1,8 @@
-const { execShell } = require("../utils/shell-exec");
+const { executeShell } = require("../utils/shell-exec");
 
-execShell(
+executeShell(
   "aws cloudformation describe-stacks --stack-name streaming-blog-neptune-stack > streaming-blog-neptune-stack.json"
 );
-execShell(
+executeShell(
   "aws cloudformation describe-stacks --stack-name streaming-blog-msk-stack > streaming-blog-msk-stack.json"
 );
