@@ -1,7 +1,10 @@
 const AWS = require("aws-sdk");
 
 const describeStack = async () => {
-  const cfn = new AWS.CloudFormation();
+  const cfn = new AWS.CloudFormation({
+    apiVersion: "2010-05-15",
+    region: process.env.AWS_REGION
+  });
   const neptuneStackJson = await cfn
     .describeStacks({ StackName: "streaming-blog-neptune-stack" })
     .promise();
