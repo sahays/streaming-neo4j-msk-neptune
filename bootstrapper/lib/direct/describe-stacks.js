@@ -1,4 +1,5 @@
 const AWS = require("aws-sdk");
+const { overwriteFile } = require("../utils/write-file");
 
 const describeStack = async () => {
   const cfnArgs = {
@@ -14,8 +15,8 @@ const describeStack = async () => {
     const mskStackJson = await cfn
       .describeStacks({ StackName: "streaming-blog-msk-stack" })
       .promise();
-    console.log(neptuneStackJson);
-    console.log(mskStackJson);
+    overwriteFile("streaming-blog-neptune-stack.json", neptuneStackJson);
+    overwriteFile("streaming-blog-msk-stack.json", mskStackJson);
   } catch (e) {
     console.log(e);
   }

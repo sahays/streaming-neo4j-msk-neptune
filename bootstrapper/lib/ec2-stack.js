@@ -35,19 +35,28 @@ class Ec2Stack extends cdk.Stack {
     const neptunePolicy = this.makeNeptunePolicy();
     const mskInlinePolicy = this.makeMskInlinePolicy(MskRef);
 
-    this.attachIamPolicies(neo4jEc2, neptunePolicy, mskInlinePolicy);
-
-    const info = fileToJson("EC2Configuration.json.env");
-    setupDockerScript(info);
-
+    this.attachIamPolicies(
+      neo4jEc2,
+      neptunePolicy,
+      mskInlinePolicy,
+      this.makeCloudformationPolicy()
+    );
     this.Neo4jEc2 = neo4jEc2;
+    setupDockerScript(neo4jEc2);
     emit(this, this.Neo4jEc2, neptuneStack, mskStack, networkStack);
   }
 
-  attachIamPolicies(neo4jEc2, neptunePolicy, mskInlinePolicy) {
+  attachIamPolicies(neo4jEc2, neptunePolicy, mskInlinePolicy, cfnPolicy) {
     neo4jEc2.role.attachInlinePolicy(neptunePolicy.inlinePolicy);
     neo4jEc2.role.addManagedPolicy(neptunePolicy.managedPolicy);
     neo4jEc2.role.attachInlinePolicy(mskInlinePolicy);
+    neo4jEc2.role.addManagedPolicy(cfnPolicy);
+  }
+
+  makeCloudformationPolicy() {
+    return ManagedPolicy.fromAwsManagedPolicyName(
+      "AWSCloudFormationReadOnlyAccess"
+    );
   }
 
   makeCloudwatchInlinePolicy() {

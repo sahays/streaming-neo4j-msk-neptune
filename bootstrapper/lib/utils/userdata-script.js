@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT-0
 
 const UserDataScript = () => {
-  const setupDockerScript = () => {
+  const setupDockerScript = (neo4jEc2) => {
     const installDocker = [
       "sudo su #",
       "cd /",
