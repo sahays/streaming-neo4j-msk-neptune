@@ -14,6 +14,7 @@ const neptuneClusterIdentifier = neptuneStack.Outputs[1].OutputValue;
 const neptuneIamRoleArn = neptuneStack.Outputs[2].OutputValue;
 const mskCluster = mskStack.Outputs[0].OutputValue;
 const awsRegion = process.env.AWS_REGION;
+const outputPath = process.env.CONFIG_OUTPUT_PATH || "";
 
 addNeptuneIamRole({
   neptuneClusterIdentifier,
@@ -22,20 +23,24 @@ addNeptuneIamRole({
 });
 
 const getConnectionStrings = async () => {
-  const connectionStrings = await getMskConnectionString({
-    mskCluster,
-    region: awsRegion
-  });
-  overwriteFile(
-    "EC2Configuration.json.env",
-    JSON.stringify({
-      connectionStrings,
-      neptuneClusterIdentifier,
-      neptuneIamRoleArn,
-      neptuneClusterEnpoint,
+  try {
+    const connectionStrings = await getMskConnectionString({
+      mskCluster,
       region: awsRegion
-    })
-  );
+    });
+    overwriteFile(
+      outputPath + "ec2-configuration.json.env",
+      JSON.stringify({
+        connectionStrings,
+        neptuneClusterIdentifier,
+        neptuneIamRoleArn,
+        neptuneClusterEnpoint,
+        region: awsRegion
+      })
+    );
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 getConnectionStrings();
