@@ -15,4 +15,6 @@ const describeStack = async () => {
   console.log(mskStackJson);
 };
 
+console.log("describing stacks...");
 describeStack();
+console.log("done");
