@@ -28,29 +28,22 @@ class Ec2Stack extends cdk.Stack {
     const { emit } = EmitOutput();
     const { neptuneStack, networkStack, mskStack } = props;
     const { CustomVpc, InstanceSg } = networkStack;
-    const { NeptuneDBCluster } = neptuneStack;
-    const { MskRef } = mskStack;
 
     const neo4jEc2 = this.createEc2(CustomVpc, InstanceSg);
-    const neptunePolicy = this.makeNeptunePolicy();
-    const mskInlinePolicy = this.makeMskInlinePolicy(MskRef);
-
-    this.attachIamPolicies(
-      neo4jEc2,
-      neptunePolicy,
-      mskInlinePolicy,
-      this.makeCloudformationPolicy()
-    );
     this.Neo4jEc2 = neo4jEc2;
+    this.attachIamPolicies();
     setupDockerScript(neo4jEc2);
     emit(this, this.Neo4jEc2, neptuneStack, mskStack, networkStack);
   }
 
-  attachIamPolicies(neo4jEc2, neptunePolicy, mskInlinePolicy, cfnPolicy) {
-    neo4jEc2.role.attachInlinePolicy(neptunePolicy.inlinePolicy);
-    neo4jEc2.role.addManagedPolicy(neptunePolicy.managedPolicy);
-    neo4jEc2.role.attachInlinePolicy(mskInlinePolicy);
-    neo4jEc2.role.addManagedPolicy(cfnPolicy);
+  attachIamPolicies() {
+    const neptunePolicy = this.makeNeptunePolicy();
+    this.Neo4jEc2.role.attachInlinePolicy(neptunePolicy.inlinePolicy);
+    this.Neo4jEc2.role.addManagedPolicy(neptunePolicy.managedPolicy);
+    this.Neo4jEc2.role.addManagedPolicy(this.makeMskPolicy());
+    this.Neo4jEc2.role.addManagedPolicy(this.makeCloudformationPolicy());
+    this.Neo4jEc2.role.attachInlinePolicy(this.makeRdsInlinePolicy());
+    this.Neo4jEc2.role.attachInlinePolicy(this.makeIamPassRolePolicy());
   }
 
   makeCloudformationPolicy() {
@@ -59,32 +52,31 @@ class Ec2Stack extends cdk.Stack {
     );
   }
 
-  makeCloudwatchInlinePolicy() {
-    const ec2CwPolicy = new PolicyStatement({
+  makeMskPolicy() {
+    return ManagedPolicy.fromAwsManagedPolicyName("AmazonMSKReadOnlyAccess");
+  }
+
+  makeIamPassRolePolicy() {
+    const iamPassRolePolicy = new PolicyStatement({
       effect: Effect.ALLOW
     });
-    ec2CwPolicy.addActions("logs:DescribeLogGroups");
-    ec2CwPolicy.addActions("logs:DescribeLogStreams");
-    ec2CwPolicy.addActions("logs:CreateLogStream");
-    ec2CwPolicy.addActions("logs:CreateLogGroup");
-    ec2CwPolicy.addActions("logs:PutLogEvents");
-    ec2CwPolicy.addResources("*");
+    iamPassRolePolicy.addActions("iam:PassRole");
+    iamPassRolePolicy.addResources("*");
 
-    return new Policy(this, "ec2Cloudwatch", {
-      statements: [ec2CwPolicy]
+    return new Policy(this, "ec2IamPassRole", {
+      statements: [iamPassRolePolicy]
     });
   }
 
-  makeMskInlinePolicy(mskClusterArn) {
-    const ec2MskPolicy = new PolicyStatement({
+  makeRdsInlinePolicy() {
+    const ec2RdsPolicy = new PolicyStatement({
       effect: Effect.ALLOW
     });
-    ec2MskPolicy.addActions("kafka:DescribeCluster");
-    ec2MskPolicy.addActions("kafka:GetBootstrapBrokers");
-    ec2MskPolicy.addResources(mskClusterArn);
+    ec2RdsPolicy.addActions("rds:AddRoleToDBCluster");
+    ec2RdsPolicy.addResources("*");
 
-    return new Policy(this, "ec2Msk", {
-      statements: [ec2MskPolicy]
+    return new Policy(this, "ec2Rds", {
+      statements: [ec2RdsPolicy]
     });
   }
 
