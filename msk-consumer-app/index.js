@@ -1,16 +1,17 @@
 const { Kafka } = require("kafkajs");
 const gremlin = require("gremlin");
 
+const config = {
+  neptuneEndpoint: process.env.NEPTUNE_HOST,
+  clientId: "msk-consumer-app",
+  ssl: true,
+  kafkaBrokers: process.env.ZOOKEEPER_CONNECT.split(","),
+  groupId: "neo4j"
+};
+
 const makeG = () => {
   const DriverRemoteConnection = gremlin.driver.DriverRemoteConnection;
   const Graph = gremlin.structure.Graph;
-  const config = {
-    neptuneEndpoint: process.env.NEPTUNE_HOST,
-    clientId: "msk-consumer-app",
-    ssl: true,
-    kafkaBrokers: process.env.ZOOKEEPER_CONNECT.split(","),
-    groupId: "neo4j"
-  };
 
   dc = new DriverRemoteConnection(
     "wss://" + config.neptuneEndpoint + ":8182/gremlin"
