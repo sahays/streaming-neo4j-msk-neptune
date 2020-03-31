@@ -2,10 +2,10 @@ const { Kafka } = require("kafkajs");
 const gremlin = require("gremlin");
 
 const config = {
-  neptuneEndpoint: process.env.NEPTUNE_HOST,
+  neptuneEndpoint: process.env.NEPTUNE_HOST || "0.0.0.0",
   clientId: "msk-consumer-app",
   ssl: true,
-  kafkaBrokers: (process.env.ZOOKEEPER_CONNECT || ",").split(","),
+  kafkaBrokers: (process.env.BOOTSTRAP_SERVERS || ",").split(","),
   groupId: "neo4j"
 };
 
