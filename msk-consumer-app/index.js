@@ -5,7 +5,7 @@ const config = {
   neptuneEndpoint: process.env.NEPTUNE_HOST,
   clientId: "msk-consumer-app",
   ssl: true,
-  kafkaBrokers: process.env.ZOOKEEPER_CONNECT.split(","),
+  kafkaBrokers: (process.env.ZOOKEEPER_CONNECT || ",").split(","),
   groupId: "neo4j"
 };
 
