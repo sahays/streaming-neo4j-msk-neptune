@@ -32,6 +32,8 @@ const getConnectionStrings = async () => {
       "#!/bin/bash",
       "export BOOTSTRAP_SERVERS=" + connectionStrings.broker,
       "export ZOOKEEPER_CONNECT=" + connectionStrings.zookeeper,
+      "export NODE_TOPIC=node_topic",
+      "export RELS_TOPIC=rels_topic",
       "export NEPTUNE_HOST=" + neptuneClusterEnpoint, // for docker gremlin
       "export NEO4J_USER=neo4j", // for docker exec neo4j
       "export NEO4J_PWD=pass@word1" // for docker exec neo4j

@@ -1,10 +1,16 @@
 const { Kafka } = require("kafkajs");
 const gremlin = require("gremlin");
-const config = require("./config");
 
 const makeG = () => {
   const DriverRemoteConnection = gremlin.driver.DriverRemoteConnection;
   const Graph = gremlin.structure.Graph;
+  const config = {
+    neptuneEndpoint: process.env.NEPTUNE_HOST,
+    clientId: "msk-consumer-app",
+    ssl: true,
+    kafkaBrokers: process.env.ZOOKEEPER_CONNECT.split(","),
+    groupId: "neo4j"
+  };
 
   dc = new DriverRemoteConnection(
     "wss://" + config.neptuneEndpoint + ":8182/gremlin"
@@ -29,7 +35,7 @@ const run = async () => {
   // Consuming
   await consumer.connect();
 
-  config.kafkaTopics.map(async topic => {
+  config.kafkaTopics.map(async (topic) => {
     await consumer.subscribe({ topic: topic, fromBeginning: true });
   });
 
@@ -57,12 +63,12 @@ const run = async () => {
             } else if (payload.after) {
               // inserted
               console.log("inserted", payloadId, payload.after);
-              payload.after.labels.map(async label => {
+              payload.after.labels.map(async (label) => {
                 const inserted = payload.after.properties;
                 console.log(label);
                 const v = g.addV(label);
                 const keys = Object.keys(inserted);
-                keys.map(key => {
+                keys.map((key) => {
                   const val = inserted[key];
                   v.property(key, val);
                 });
