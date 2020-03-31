@@ -1,1 +1,0 @@
-sodu yum install git

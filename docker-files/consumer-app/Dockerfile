@@ -4,7 +4,7 @@ RUN apk --update add git less openssh && \
     rm /var/cache/apk/*
 
 RUN git clone https://github.com/sahays/streaming-neo4j-msk-neptune.git 
-WORKDIR /streaming-neo4j-msk-neptune/kafka-consumer-app
+WORKDIR /streaming-neo4j-msk-neptune/msk-consumer-app
 RUN npm install
 CMD ["node","index.js"]
 

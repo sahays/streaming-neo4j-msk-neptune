@@ -1,6 +1,0 @@
-{
-   "EncryptionInTransit": {
-        "InCluster": true,
-        "ClientBroker": "TLS"
-    }
-}

@@ -31,7 +31,10 @@ const getConnectionStrings = async () => {
     const output = [
       "#!/bin/bash",
       "export BOOTSTRAP_SERVERS=" + connectionStrings.broker,
-      "export ZOOKEEPER_CONNECT=" + connectionStrings.zookeeper
+      "export ZOOKEEPER_CONNECT=" + connectionStrings.zookeeper,
+      "export NEPTUNE_HOST=" + neptuneClusterEnpoint, // for docker gremlin
+      "export NEO4J_USER=neo4j", // for docker exec neo4j
+      "export NEO4J_PWD=pass@word1" // for docker exec neo4j
     ];
     overwriteFile(outputPath + "ec2-configuration.sh", output.join("\n"));
   } catch (e) {
