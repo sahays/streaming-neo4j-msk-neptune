@@ -101,7 +101,7 @@ const run = async () => {
 };
 
 try {
-  run().catch(console.error);
+  run();
 } catch (e) {
   console.log(e);
 }
