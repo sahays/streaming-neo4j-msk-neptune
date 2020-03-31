@@ -24,7 +24,7 @@ const UserDataScript = () => {
     const runAfterDeploy = [
       "export CONFIG_OUTPUT_PATH=/data/",
       "mkdir data",
-      "docker run -t --mount type=bind,src='$(pwd)'/data,target=/data sanjeets/streaming-blog-after-deploy:3dbb04b sh ./run-script.sh",
+      "docker run -t --mount type=bind,src=/data,target=/data sanjeets/streaming-blog-after-deploy:3dbb04b sh ./run-script.sh",
       "chmod +x data/ec2-configuration.sh && . data/ec2-configuration.sh",
       "docker run -d -e ZOOKEEPER_CONNECT -e BOOTSTRAP_SERVERS -e AWS_REGION --name neo4j-400-msk sanjeets/neo4j-400-msk:c9d2143",
       "docker exec -t -e ZOOKEEPER_CONNECT -e BOOTSTRAP_SERVERS -e AWS_REGION neo4j-400-msk sh -c ./update-conf.sh"
