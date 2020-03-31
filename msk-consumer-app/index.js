@@ -6,7 +6,8 @@ const config = {
   clientId: "msk-consumer-app",
   ssl: true,
   kafkaBrokers: process.env.BOOTSTRAP_SERVERS.split(","),
-  groupId: "neo4j"
+  groupId: "neo4j",
+  kafkaTopics: ["node_topic", "rels_topic"]
 };
 
 const makeG = () => {
