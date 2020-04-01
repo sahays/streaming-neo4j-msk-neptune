@@ -1,5 +1,6 @@
 const { Kafka } = require("kafkajs");
 const gremlin = require("gremlin");
+const admin = kafka.admin();
 
 const config = {
   neptuneEndpoint: process.env.NEPTUNE_HOST,
@@ -29,11 +30,29 @@ const kafka = new Kafka({
   brokers: config.kafkaBrokers
 });
 
-const consumer = kafka.consumer({ groupId: config.groupId });
-
 console.log(config);
 
+const setup = async () => {
+  try {
+    await admin.connect();
+    config.kafkaTopics.map(async (topic) => {
+      try {
+        await admin.createTopics({
+          topics: [{ topic }]
+        });
+      } catch (e) {
+        console.log("error creating topic: ", e);
+      }
+    });
+    await admin.disconnect();
+  } catch (e) {
+    console.log("error during setup: ", e);
+  }
+};
+
 const run = async () => {
+  const consumer = kafka.consumer({ groupId: config.groupId });
+
   // Consuming
   await consumer.connect();
 
@@ -101,6 +120,7 @@ const run = async () => {
 };
 
 try {
+  setup();
   run().catch(console.error);
 } catch (e) {
   console.log(e);

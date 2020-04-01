@@ -26,8 +26,8 @@ const UserDataScript = () => {
       "mkdir data",
       "docker run -t --mount type=bind,src=/data,target=/data sanjeets/streaming-blog-after-deploy:3dbb04b sh ./run-script.sh",
       "chmod +x data/ec2-configuration.sh && . data/ec2-configuration.sh",
-      "docker run -d -e ZOOKEEPER_CONNECT -e BOOTSTRAP_SERVERS -e AWS_REGION --name neo4j-400-msk sanjeets/neo4j-400-msk:c9d2143",
-      "docker exec -t -e ZOOKEEPER_CONNECT -e BOOTSTRAP_SERVERS -e AWS_REGION neo4j-400-msk sh -c ./update-conf.sh"
+      "docker run -d --ulimit nofile=40000:40000 -e ZOOKEEPER_CONNECT -e BOOTSTRAP_SERVERS -e AWS_REGION -e NODE_TOPIC -e RELS_TOPIC  --name neo4j-400-msk sanjeets/neo4j-400-msk:1ff9773",
+      "docker exec -t -e ZOOKEEPER_CONNECT -e BOOTSTRAP_SERVERS -e AWS_REGION -e NODE_TOPIC -e RELS_TOPIC  neo4j-400-msk sh -c /run-script.sh"
     ];
     neo4jEc2.addUserData(runAfterDeploy.join("\n"));
   };
