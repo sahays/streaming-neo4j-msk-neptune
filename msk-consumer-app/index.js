@@ -123,7 +123,7 @@ const run = async () => {
 
 try {
   setup();
-  run().catch(console.error);
+  // run().catch(console.error);
 } catch (e) {
   console.log(e);
 }
