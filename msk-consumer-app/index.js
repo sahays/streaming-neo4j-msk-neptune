@@ -38,9 +38,10 @@ const setup = async () => {
     await admin.connect();
     config.kafkaTopics.map(async (topic) => {
       try {
-        await admin.createTopics({
+        const result = await admin.createTopics({
           topics: [{ topic }]
         });
+        console.log("topic created: ", result);
       } catch (e) {
         console.log("error creating topic: ", e);
       }
