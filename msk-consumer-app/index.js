@@ -1,6 +1,5 @@
 const { Kafka } = require("kafkajs");
 const gremlin = require("gremlin");
-const admin = kafka.admin();
 
 const config = {
   neptuneEndpoint: process.env.NEPTUNE_HOST,
@@ -34,6 +33,8 @@ console.log(config);
 
 const setup = async () => {
   try {
+    const admin = kafka.admin();
+
     await admin.connect();
     config.kafkaTopics.map(async (topic) => {
       try {
