@@ -15,6 +15,7 @@ const MskClient = (region) => {
     }
     return;
   };
+
   const getBootstrapServers = async (mskClusterArn) => {
     try {
       const result = await kafka
@@ -29,7 +30,22 @@ const MskClient = (region) => {
     return;
   };
 
-  return { getZookeeperConnections, getBootstrapServers };
+  const createConfiguration = async ({ name, props }) => {
+    try {
+      const result = await kafka
+        .createConfiguration({
+          Name: name,
+          KafkaVersions: ["1.1.1", "2.1.0"],
+          ServerProperties: props
+        })
+        .promise();
+      return result;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  return { getZookeeperConnections, getBootstrapServers, createConfiguration };
 };
 
 module.exports = { MskClient };

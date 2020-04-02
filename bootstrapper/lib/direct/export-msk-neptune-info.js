@@ -1,7 +1,7 @@
 const { fileToJson } = require("../utils/read-file");
 const { overwriteFile } = require("../utils/write-file");
 const { addNeptuneIamRole } = require("./neptune-add-role");
-const { getMskConnectionString } = require("./msk-connection-string");
+const { getMskConnectionString, createConfiguration } = require("./msk-setup");
 
 const describeNeptuneStack = fileToJson(
   "streaming-blog-neptune-stack.json.env"
@@ -38,10 +38,19 @@ const getConnectionStrings = async () => {
       "export NEO4J_USER=neo4j", // for docker exec neo4j
       "export NEO4J_PWD=pass@word1" // for docker exec neo4j
     ];
-    overwriteFile(outputPath + "ec2-configuration.sh", output.join("\n"));
+    overwriteFile(outputPath + "setup-env.sh", output.join("\n"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+const createConfiguration = async () => {
+  try {
+    await createConfiguration();
   } catch (e) {
     console.log(e);
   }
 };
 
 getConnectionStrings();
+createConfiguration();

@@ -35,7 +35,8 @@ const setup = async () => {
   try {
     const admin = kafka.admin();
 
-    await admin.connect();
+    const connectResult = await admin.connect();
+    console.log("connected: ", connectResult);
     config.kafkaTopics.map(async (topic) => {
       try {
         const result = await admin.createTopics({
@@ -51,6 +52,8 @@ const setup = async () => {
     console.log("error during setup: ", e);
   }
 };
+
+// bin/kafka-topics.sh --create --zookeeper z-2.streaming-neo4j-neptun.5hs2p7.c3.kafka.us-west-2.amazonaws.com:2181,z-1.streaming-neo4j-neptun.5hs2p7.c3.kafka.us-west-2.amazonaws.com:2181,z-3.streaming-neo4j-neptun.5hs2p7.c3.kafka.us-west-2.amazonaws.com:2181 --replication-factor 3 --partitions 1 --topic AWSKafkaTutorialTopic
 
 const run = async () => {
   const consumer = kafka.consumer({ groupId: config.groupId });
