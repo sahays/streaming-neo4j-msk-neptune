@@ -1,5 +1,6 @@
 #!/bin/sh
 {
+    ls && \
     rm -rf /streaming-neo4j-msk-neptune && \
     git clone https://github.com/sahays/streaming-neo4j-msk-neptune.git && \
     cd /streaming-neo4j-msk-neptune/bootstrapper && \
