@@ -4,6 +4,7 @@ volumes:
 services:
   neo4j:
     build: ./docker-files/neo4j
+    container_name: neo4j-service
     ports:
       - "7474:7474"
       - "7687:7687"

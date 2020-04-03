@@ -4,6 +4,7 @@ volumes:
 services:
   after_deploy:
     build: ./docker-files/after-deploy
+    container_name: startup-service
     environment:
       - AWS_REGION
       - SHARED_FOLDER=/data
