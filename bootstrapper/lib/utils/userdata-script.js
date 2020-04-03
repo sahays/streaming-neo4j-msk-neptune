@@ -36,6 +36,11 @@ const UserDataScript = () => {
   return { setupDockerScript };
 };
 
+// docker-compose -f 01-docker-compose.yml
+// export DOCKER_VOL_PATH=`docker volume inspect --format '{{ .Mountpoint }}' streaming-neo4j-msk-neptune_shared-folder`
+// . /$DOCKER_VOL_PATH/setup-env.sh
+// docker-compose -f 02-docker-compose.yml
+
 // create new topic
 // wget https://archive.apache.org/dist/kafka/2.2.1/kafka_2.12-2.2.1.tgz
 // tar -xzf kafka_2.12-2.2.1.tgz
