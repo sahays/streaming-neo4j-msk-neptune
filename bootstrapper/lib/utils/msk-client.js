@@ -30,7 +30,7 @@ const MskClient = (region) => {
     return;
   };
 
-  const createKafkaConfiguration = async ({ name, props }) => {
+  const createKafkaConfiguration = async (name, props) => {
     try {
       const result = await kafka
         .createConfiguration({
