@@ -33,4 +33,3 @@ services:
       NEO4J_dbms_jvm_additional: -Djavax.net.debug=ssl:handshake
       NEO4J_dbms_security_procedures_whitelist: apoc.*
       NEO4J_dbms_security_procedures_unrestricted: apoc.*
-    command: sh -c "/run-script.sh"
