@@ -45,4 +45,4 @@ const ec2Stack = new Ec2Stack(app, "streaming-blog-ec2-stack", {
   mskStack: mskStack
 });
 
-overwriteFile("StackInfo.json.env", JSON.stringify(defaultEnv));
+// overwriteFile("StackInfo.json.env", JSON.stringify(defaultEnv));
