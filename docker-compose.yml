@@ -1,14 +1,16 @@
-version: "3.2"
+version: "3.7"
+volumes:
+  shared-folder:
 services:
   setup:
     build: ./docker-files/after-deploy
     environment:
-      AWS_REGION
-      SHARED_FOLDER: /data
+      - AWS_REGION
+      - SHARED_FOLDER=/data
     image: sanjeets/streaming-blog-after-deploy:4b91f2e
     command: sh -c "/run-script.sh"
     volumes:
-      - shared-folder: ${SHARED_FOLDER}
+      - shared-folder:/data
   neo4j:
     build: ./docker-files/neo4j
     image: neo4j:4.0.0
@@ -29,11 +31,10 @@ services:
     volumes:
       - "./neo4j/plugins:/plugins"
       - "./neo4j/tmp:/tmp"
-      - shared-folder: /data
+      - shared-folder:/data
     environment:
       NEO4J_AUTH: neo4j/streams
       NEO4J_dbms_logs_debug_level: DEBUG
-      SHARED_FOLDER: /data
       # KAFKA related configuration
       NEO4J_kafka_zookeeper_connect: ${ZOOKEEPER_CONNECT}
       NEO4J_kafka_bootstrap_servers: ${BOOTSTRAP_SERVERS}

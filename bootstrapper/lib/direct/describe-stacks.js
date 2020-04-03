@@ -1,5 +1,6 @@
 const AWS = require("aws-sdk");
 const { overwriteFile } = require("../utils/write-file");
+const sharedFolder = process.env.SHARED_FOLDER || "/data";
 
 const describeStack = async () => {
   const cfnArgs = {
@@ -16,11 +17,11 @@ const describeStack = async () => {
       .describeStacks({ StackName: "streaming-blog-msk-stack" })
       .promise();
     overwriteFile(
-      "streaming-blog-neptune-stack.json.env",
+      sharedFolder + "/streaming-blog-neptune-stack.json",
       JSON.stringify(neptuneStackJson)
     );
     overwriteFile(
-      "streaming-blog-msk-stack.json.env",
+      sharedFolder + "/streaming-blog-msk-stack.json",
       JSON.stringify(mskStackJson)
     );
   } catch (e) {

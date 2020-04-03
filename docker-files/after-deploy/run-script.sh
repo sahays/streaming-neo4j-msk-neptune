@@ -4,6 +4,7 @@
     git clone https://github.com/sahays/streaming-neo4j-msk-neptune.git
     cd /streaming-neo4j-msk-neptune/bootstrapper
     npm install
-    cd /streaming-neo4j-msk-neptune/bootstrapper/lib/direct/
-    node describe-stacks.js && node export-msk-neptune-info.js
+    cd /
+    node /streaming-neo4j-msk-neptune/bootstrapper/lib/direct/describe-stacks.js
+    node /streaming-neo4j-msk-neptune/bootstrapper/lib/direct/export-msk-neptune-info.js
 } 2>&1 | tee run-script.log

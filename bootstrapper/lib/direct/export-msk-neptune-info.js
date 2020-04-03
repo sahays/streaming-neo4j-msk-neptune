@@ -2,11 +2,14 @@ const { fileToJson } = require("../utils/read-file");
 const { overwriteFile } = require("../utils/write-file");
 const { addNeptuneIamRole } = require("./neptune-add-role");
 const { getMskConnectionString, createConfiguration } = require("./msk-setup");
+const sharedFolder = process.env.SHARED_FOLDER || "/data";
 
 const describeNeptuneStack = fileToJson(
-  "streaming-blog-neptune-stack.json.env"
+  sharedFolder + "/streaming-blog-neptune-stack.json"
 );
-const describeMskStack = fileToJson("streaming-blog-msk-stack.json.env");
+const describeMskStack = fileToJson(
+  sharedFolder + "/streaming-blog-msk-stack.json.env"
+);
 const neptuneStack = describeNeptuneStack.Stacks[0];
 const mskStack = describeMskStack.Stacks[0];
 const neptuneClusterEnpoint = neptuneStack.Outputs[0].OutputValue;
@@ -14,7 +17,7 @@ const neptuneClusterIdentifier = neptuneStack.Outputs[1].OutputValue;
 const neptuneIamRoleArn = neptuneStack.Outputs[2].OutputValue;
 const mskCluster = mskStack.Outputs[0].OutputValue;
 const awsRegion = process.env.AWS_REGION;
-const outputPath = process.env.CONFIG_OUTPUT_PATH || "";
+// const outputPath = process.env.CONFIG_OUTPUT_PATH || "";
 
 addNeptuneIamRole({
   neptuneClusterIdentifier,
@@ -38,7 +41,7 @@ const asyncGetConnectionStrings = async () => {
       "export NEO4J_USER=neo4j", // for docker exec neo4j
       "export NEO4J_PWD=pass@word1" // for docker exec neo4j
     ];
-    overwriteFile(outputPath + "setup-env.sh", output.join("\n"));
+    overwriteFile(sharedFolder + "/setup-env.sh", output.join("\n"));
   } catch (e) {
     console.log(e);
   }
