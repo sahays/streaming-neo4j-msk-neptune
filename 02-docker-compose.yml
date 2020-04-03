@@ -19,7 +19,9 @@ services:
       - "./neo4j/plugins:/plugins"
       - "./neo4j/tmp:/tmp"
       - shared-folder:/data
-    command: sh -c "./run-script.sh"
+    command:
+      sh -c "cp ${JAVA_HOME}/lib/security/cacerts
+      ${NEO4J_HOME}/temp/kafka.client.truststore.jks"
     environment:
       NEO4J_AUTH: ${NEO4J_USER}/${NEO4J_PWD}
       NEO4J_dbms_logs_debug_level: DEBUG
