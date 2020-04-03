@@ -44,6 +44,7 @@ class Ec2Stack extends cdk.Stack {
     this.Neo4jEc2.role.addManagedPolicy(this.makeCloudformationPolicy());
     this.Neo4jEc2.role.attachInlinePolicy(this.makeRdsInlinePolicy());
     this.Neo4jEc2.role.attachInlinePolicy(this.makeIamPassRolePolicy());
+    this.Neo4jEc2.role.attachInlinePolicy(this.makeKafkaPolicy());
   }
 
   makeCloudformationPolicy() {
@@ -54,6 +55,18 @@ class Ec2Stack extends cdk.Stack {
 
   makeMskPolicy() {
     return ManagedPolicy.fromAwsManagedPolicyName("AmazonMSKReadOnlyAccess");
+  }
+
+  makeKafkaPolicy() {
+    const kafkaPolicy = new PolicyStatement({
+      effect: Effect.ALLOW
+    });
+    kafkaPolicy.addActions("kafka:CreateConfiguration");
+    kafkaPolicy.addActions("kafka:UpdateClusterConfiguration");
+    kafkaPolicy.addResources("*");
+    return new Policy(this, "ec2Kafka", {
+      statements: [kafkaPolicy]
+    });
   }
 
   makeIamPassRolePolicy() {
