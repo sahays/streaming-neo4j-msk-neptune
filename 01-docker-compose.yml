@@ -7,7 +7,6 @@ services:
     environment:
       - AWS_REGION
       - SHARED_FOLDER=/data
-    image: sanjeets/streaming-blog-after-deploy:4b91f2e
     command: sh -c "/run-script.sh"
     volumes:
       - shared-folder:/data
