@@ -30,7 +30,7 @@ const MskClient = (region) => {
     return;
   };
 
-  const createConfiguration = async ({ name, props }) => {
+  const createKafkaConfiguration = async ({ name, props }) => {
     try {
       const result = await kafka
         .createConfiguration({
@@ -45,7 +45,11 @@ const MskClient = (region) => {
     }
   };
 
-  return { getZookeeperConnections, getBootstrapServers, createConfiguration };
+  return {
+    getZookeeperConnections,
+    getBootstrapServers,
+    createKafkaConfiguration
+  };
 };
 
 module.exports = { MskClient };
