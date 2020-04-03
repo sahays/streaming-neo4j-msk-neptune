@@ -8,7 +8,7 @@ const describeNeptuneStack = fileToJson(
   sharedFolder + "/streaming-blog-neptune-stack.json"
 );
 const describeMskStack = fileToJson(
-  sharedFolder + "/streaming-blog-msk-stack.json.env"
+  sharedFolder + "/streaming-blog-msk-stack.json"
 );
 const neptuneStack = describeNeptuneStack.Stacks[0];
 const mskStack = describeMskStack.Stacks[0];
