@@ -1,13 +1,13 @@
 const { MskClient } = require("../utils/msk-client");
 
+const {
+  getZookeeperConnections,
+  getBootstrapServers,
+  createKafkaConfiguration
+} = MskClient(region);
+
 const getMskConnectionString = async ({ mskCluster, region }) => {
   try {
-    const {
-      getZookeeperConnections,
-      getBootstrapServers,
-      createKafkaConfiguration
-    } = MskClient(region);
-
     const broker = await getBootstrapServers(mskCluster);
     const zookeeper = await getZookeeperConnections(mskCluster);
     return { broker, zookeeper };
