@@ -4,9 +4,9 @@ const {
   getZookeeperConnections,
   getBootstrapServers,
   createKafkaConfiguration
-} = MskClient(region);
+} = MskClient(process.env.AWS_REGION);
 
-const getMskConnectionString = async ({ mskCluster, region }) => {
+const getMskConnectionString = async ({ mskCluster }) => {
   try {
     const broker = await getBootstrapServers(mskCluster);
     const zookeeper = await getZookeeperConnections(mskCluster);

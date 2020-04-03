@@ -28,8 +28,7 @@ addNeptuneIamRole({
 const asyncGetConnectionStrings = async () => {
   try {
     const connectionStrings = await getMskConnectionString({
-      mskCluster,
-      region: awsRegion
+      mskCluster
     });
     const output = [
       "#!/bin/bash",
