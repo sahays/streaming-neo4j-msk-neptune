@@ -4,8 +4,6 @@ volumes:
 services:
   neo4j:
     build: ./docker-files/neo4j
-    hostname: neo4j
-    container_name: neo4j
     ports:
       - "7474:7474"
       - "7687:7687"
@@ -21,7 +19,7 @@ services:
       - "./neo4j/tmp:/tmp"
       - shared-folder:/data
     environment:
-      NEO4J_AUTH: neo4j/streams
+      NEO4J_AUTH: $NEO4J_USER/$NEO4J_PWD
       NEO4J_dbms_logs_debug_level: DEBUG
       # KAFKA related configuration
       NEO4J_kafka_zookeeper_connect: ${ZOOKEEPER_CONNECT}
