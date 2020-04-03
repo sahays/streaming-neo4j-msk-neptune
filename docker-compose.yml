@@ -1,11 +1,11 @@
 version: "3.2"
 services:
   setup:
-    image: sanjeets/streaming-blog-after-deploy:3dbb04b
+    environment:
+      - AWS_REGION
+      - CONFIG_OUTPUT_PATH
+    image: sanjeets/streaming-blog-after-deploy:4b91f2e
     command: sh -c "/run-script.sh"
-  environment:
-    - AWS_REGION
-    - CONFIG_OUTPUT_PATH
   # neo4j:
   #   image: neo4j:4.0.0
   #   depends_on:

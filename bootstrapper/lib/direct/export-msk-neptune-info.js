@@ -22,7 +22,7 @@ addNeptuneIamRole({
   region: awsRegion
 });
 
-const getConnectionStrings = async () => {
+const asyncGetConnectionStrings = async () => {
   try {
     const connectionStrings = await getMskConnectionString({
       mskCluster,
@@ -44,7 +44,7 @@ const getConnectionStrings = async () => {
   }
 };
 
-const createConfiguration = async () => {
+const asyncCreateConfiguration = async () => {
   try {
     await createConfiguration();
   } catch (e) {
@@ -52,5 +52,5 @@ const createConfiguration = async () => {
   }
 };
 
-getConnectionStrings();
-createConfiguration();
+asyncGetConnectionStrings();
+asyncCreateConfiguration();
