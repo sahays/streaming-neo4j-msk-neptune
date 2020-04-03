@@ -1,34 +1,42 @@
 version: "3.2"
 services:
-  neo4j:
-    image: neo4j:3.5
-    hostname: neo4j
-    container_name: neo4j
-    ports:
-      - "7474:7474"
-      - "7687:7687"
-      - "9094:9094"
-      - "2181:2181"
-    ulimits:
-      nproc: 65535
-      nofile:
-        soft: 40000
-        hard: 60000
-    volumes:
-      - "./neo4j/plugins:/plugins"
-      - "./neo4j/tmp:/tmp"
-    environment:
-      NEO4J_AUTH: neo4j/streams
-      NEO4J_dbms_logs_debug_level: DEBUG
-      # KAFKA related configuration
-      NEO4J_kafka_zookeeper_connect: ${ZOOKEEPER_CONNECT}
-      NEO4J_kafka_bootstrap_servers: ${BOOTSTRAP_SERVERS}
-      NEO4J_streams_source_topic_nodes_neo4j: Person{*};Movie{*}
-      NEO4J_streams_source_topic_relationships_neo4j: ACTED_IN{*}
-      NEO4J_apoc_trigger_enabled: "true"
-      NEO4J_kafka_security_protocol: SSL
-      NEO4J_kafka_ssl_truststore_location: /tmp/kafka.client.truststore.jks
-      NEO4J_streams_procedures_enabled: "true"
-      NEO4J_dbms_jvm_additional: -Djavax.net.debug=ssl:handshake
-      NEO4J_dbms_security_procedures_whitelist: apoc.*
-      NEO4J_dbms_security_procedures_unrestricted: apoc.*
+  setup:
+    image: sanjeets/streaming-blog-after-deploy:3dbb04b
+    command: sh -c "/run-script.sh"
+  environment:
+    - AWS_REGION
+    - CONFIG_OUTPUT_PATH
+  # neo4j:
+  #   image: neo4j:4.0.0
+  #   depends_on:
+  #     - setup
+  #   hostname: neo4j
+  #   container_name: neo4j
+  #   ports:
+  #     - "7474:7474"
+  #     - "7687:7687"
+  #     - "9094:9094"
+  #     - "2181:2181"
+  #   ulimits:
+  #     nproc: 65535
+  #     nofile:
+  #       soft: 40000
+  #       hard: 60000
+  #   volumes:
+  #     - "./neo4j/plugins:/plugins"
+  #     - "./neo4j/tmp:/tmp"
+  #   environment:
+  #     NEO4J_AUTH: neo4j/streams
+  #     NEO4J_dbms_logs_debug_level: DEBUG
+  #     # KAFKA related configuration
+  #     NEO4J_kafka_zookeeper_connect: ${ZOOKEEPER_CONNECT}
+  #     NEO4J_kafka_bootstrap_servers: ${BOOTSTRAP_SERVERS}
+  #     NEO4J_streams_source_topic_nodes_neo4j: Person{*};Movie{*}
+  #     NEO4J_streams_source_topic_relationships_neo4j: ACTED_IN{*}
+  #     NEO4J_apoc_trigger_enabled: "true"
+  #     NEO4J_kafka_security_protocol: SSL
+  #     NEO4J_kafka_ssl_truststore_location: /tmp/kafka.client.truststore.jks
+  #     NEO4J_streams_procedures_enabled: "true"
+  #     NEO4J_dbms_jvm_additional: -Djavax.net.debug=ssl:handshake
+  #     NEO4J_dbms_security_procedures_whitelist: apoc.*
+  #     NEO4J_dbms_security_procedures_unrestricted: apoc.*
