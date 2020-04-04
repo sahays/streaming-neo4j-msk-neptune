@@ -9,3 +9,7 @@ export DOCKER_VOL_PATH=`docker volume inspect --format '{{ .Mountpoint }}' strea
 cat $DOCKER_VOL_PATH/setup-env.sh > /etc/profile.d/setup-env.sh
 source /etc/profile.d/setup-env.sh
 docker-compose -f 02-docker-compose.yml up -d --build --force-recreate --remove-orphans
+wget https://archive.apache.org/dist/kafka/2.2.1/kafka_2.12-2.2.1.tgz
+tar -xzf kafka_2.12-2.2.1.tgz
+cd kafka_2.12-2.2.1/bin
+kafka-topics.sh --create --zookeeper $ZOOKEEPER_CONNECT --replication-factor 2 --partitions 1 --topic $NODE_TOPIC; kafka-topics.sh --create --zookeeper $ZOOKEEPER_CONNECT --replication-factor 2 --partitions 1 --topic $RELS_TOPIC

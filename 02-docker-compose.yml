@@ -28,11 +28,16 @@ services:
       NEO4J_kafka_bootstrap_servers: ${BOOTSTRAP_SERVERS}
       NEO4J_kafka_security_protocol: SSL
       NEO4J_kafka_ssl_truststore_location: /var/lib/neo4j/temp/kafka.client.truststore.jks
+      NEO4J_kafka_acks: 1
+      NEO4J_kafka_num_partitions: 1
+      NEO4J_kafka_retries: 2
+      # streams
       NEO4J_streams_procedures_enabled: "true"
       NEO4J_streams_source_enabled: "true"
       NEO4J_streams_source_topic_nodes_neo4j: Person{*};Movie{*}
       NEO4J_streams_source_topic_relationships_neo4j: ACTED_IN{*}
       NEO4J_streams_source_schema_polling_interval: 10000
+      # other
       NEO4J_apoc_trigger_enabled: "true"
       NEO4J_dbms_jvm_additional: -Djavax.net.debug=ssl:handshake
       NEO4J_dbms_security_procedures_whitelist: apoc.*,streams.*
