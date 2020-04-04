@@ -6,3 +6,4 @@ export DOCKER_VOL_PATH=`docker volume inspect --format '{{ .Mountpoint }}' strea
 docker-compose -f 02-docker-compose.yml up -d --build --remove-orphans && \
 wget --directory-prefix ./neo4j/plugins/ https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.0.0.2/apoc-4.0.0.2-all.jar && \
 wget --directory-prefix ./neo4j/plugins/ https://github.com/neo4j-contrib/neo4j-streams/releases/download/4.0.0/neo4j-streams-4.0.0.jar
+echo $NEO4j_PWD
