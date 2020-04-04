@@ -44,11 +44,6 @@ services:
     build: ./docker-files/msk-consumer-app
     container_name: msk-consumer-service
     hostname: msk-consumer
-    ports:
-      - "7474:7474"
-      - "7687:7687"
-      - "9094:9094"
-      - "2181:2181"
     environment:
       - KAFKA_TOPIC
       - BOOTSTRAP_SERVERS
