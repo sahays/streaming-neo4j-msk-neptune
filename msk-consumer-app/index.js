@@ -7,7 +7,7 @@ const config = {
   ssl: true,
   kafkaBrokers: process.env.BOOTSTRAP_SERVERS.split(","),
   groupId: "neo4j",
-  kafkaTopics: ["node_topic", "rels_topic"]
+  kafkaTopic: process.env.KAFKA_TOPIC
 };
 
 const makeG = () => {
@@ -31,28 +31,6 @@ const kafka = new Kafka({
 
 console.log(config);
 
-const setup = async () => {
-  try {
-    const admin = kafka.admin();
-
-    const connectResult = await admin.connect();
-    console.log("connected: ", connectResult);
-    config.kafkaTopics.map(async (topic) => {
-      try {
-        const result = await admin.createTopics({
-          topics: [{ topic }]
-        });
-        console.log("topic created: ", result);
-      } catch (e) {
-        console.log("error creating topic: ", e);
-      }
-    });
-    await admin.disconnect();
-  } catch (e) {
-    console.log("error during setup: ", e);
-  }
-};
-
 // bin/kafka-topics.sh --create --zookeeper z-2.streaming-neo4j-neptun.5hs2p7.c3.kafka.us-west-2.amazonaws.com:2181,z-1.streaming-neo4j-neptun.5hs2p7.c3.kafka.us-west-2.amazonaws.com:2181,z-3.streaming-neo4j-neptun.5hs2p7.c3.kafka.us-west-2.amazonaws.com:2181 --replication-factor 3 --partitions 1 --topic AWSKafkaTutorialTopic
 
 const run = async () => {
@@ -61,9 +39,7 @@ const run = async () => {
   // Consuming
   await consumer.connect();
 
-  config.kafkaTopics.map(async (topic) => {
-    await consumer.subscribe({ topic: topic, fromBeginning: true });
-  });
+  await consumer.subscribe({ topic: config.kafkaTopic, fromBeginning: true });
 
   const g = makeG();
 
@@ -125,8 +101,7 @@ const run = async () => {
 };
 
 try {
-  setup();
-  // run().catch(console.error);
+  run().catch(console.error);
 } catch (e) {
   console.log(e);
 }

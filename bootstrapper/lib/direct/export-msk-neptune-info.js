@@ -34,11 +34,8 @@ const asyncGetConnectionStrings = async () => {
       "export AWS_REGION=" + awsRegion,
       "export BOOTSTRAP_SERVERS=" + connectionStrings.broker,
       "export ZOOKEEPER_CONNECT=" + connectionStrings.zookeeper,
-      "export NODE_TOPIC=neo4j",
-      "export RELS_TOPIC=neo4j",
-      "export NEPTUNE_HOST=" + neptuneClusterEnpoint, // for docker gremlin
-      "export NEO4J_USER=neo4j", // for docker exec neo4j
-      "export NEO4J_PWD=pass@word1" // for docker exec neo4j
+      "export KAFKA_TOPIC=neo4j",
+      "export NEPTUNE_HOST=" + neptuneClusterEnpoint // for docker gremlin
     ];
     overwriteFile(sharedFolder + "/setup-env.sh", output.join("\n"));
   } catch (e) {
