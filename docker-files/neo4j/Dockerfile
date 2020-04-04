@@ -1,4 +1,3 @@
 FROM neo4j:4.0.0
 
-COPY run-script.sh .
-RUN chmod +x ./run-script.sh
+RUN mkdir -p temp &&  cp ${JAVA_HOME}/lib/security/cacerts ./temp/kafka.client.truststore.jks
