@@ -24,6 +24,7 @@ const UserDataScript = () => {
 
     const runAfterDeploy = [
       "export CONFIG_OUTPUT_PATH=/data/",
+      "export AWS_REGION=" + process.env.CDK_DEFAULT_REGION,
       "mkdir data",
       "docker run -t --mount type=bind,src=/data,target=/data sanjeets/streaming-blog-after-deploy:3dbb04b sh ./run-script.sh",
       "chmod +x data/setup-env.sh && . data/setup-env.sh",
