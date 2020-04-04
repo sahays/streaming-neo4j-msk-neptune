@@ -32,6 +32,7 @@ const asyncGetConnectionStrings = async () => {
     });
     const output = [
       "#!/bin/bash",
+      "export AWS_REGION=" + region,
       "export BOOTSTRAP_SERVERS=" + connectionStrings.broker,
       "export ZOOKEEPER_CONNECT=" + connectionStrings.zookeeper,
       "export NODE_TOPIC=neo4j",
