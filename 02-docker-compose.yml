@@ -20,7 +20,7 @@ services:
       - "./neo4j/tmp:/tmp"
       - shared-folder:/data
     environment:
-      NEO4J_AUTH: "${NEO4J_USER}/${NEO4J_PWD}"
+      NEO4J_AUTH: neo4j/pass@word1
       NEO4J_dbms_logs_debug_level: DEBUG
       # KAFKA related configuration
       NEO4J_kafka_zookeeper_connect: ${ZOOKEEPER_CONNECT}
