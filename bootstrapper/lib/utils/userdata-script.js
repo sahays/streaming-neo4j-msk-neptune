@@ -43,6 +43,7 @@ const UserDataScript = () => {
 // docker-compose -f 02-docker-compose.yml
 
 // git stash && git pull && chmod +x startup.sh && . startup.sh
+// docker container exec -it neo4j-service cypher-shell
 
 // create new topic
 // wget https://archive.apache.org/dist/kafka/2.2.1/kafka_2.12-2.2.1.tgz
