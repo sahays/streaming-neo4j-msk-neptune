@@ -49,4 +49,7 @@ services:
       - "7687:7687"
       - "9094:9094"
       - "2181:2181"
-    environment: KAFKA_TOPIC BOOTSTRAP_SERVERS NEPTUNE_HOST
+    environment:
+      - KAFKA_TOPIC
+      - BOOTSTRAP_SERVERS
+      - NEPTUNE_HOST
