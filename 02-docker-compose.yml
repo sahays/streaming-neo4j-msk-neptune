@@ -44,6 +44,7 @@ services:
     build: ./docker-files/msk-consumer-app
     container_name: msk-consumer-service
     hostname: msk-consumer
+    command: sh -c "/run-script.sh"
     environment:
       - KAFKA_TOPIC
       - BOOTSTRAP_SERVERS
