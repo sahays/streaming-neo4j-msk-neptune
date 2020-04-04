@@ -1,9 +1,6 @@
 docker-compose -f 02-docker-compose.yml down && \
 docker-compose -f 01-docker-compose.yml down && \
 docker volume rm -f streaming-neo4j-msk-neptune_shared-folder && \
-rm -rf neo4j && mkdir neo4j && mkdir neo4j/plugins && \
-wget --directory-prefix neo4j/plugins/ https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.5.0.8/apoc-3.5.0.8-all.jar && \
-wget --directory-prefix neo4j/plugins/ https://github.com/neo4j-contrib/neo4j-streams/releases/download/3.5.4/neo4j-streams-3.5.4.jar && \
 docker-compose -f 01-docker-compose.yml up --build --force-recreate --remove-orphans && \
 export DOCKER_VOL_PATH=`docker volume inspect --format '{{ .Mountpoint }}' streaming-neo4j-msk-neptune_shared-folder` && \
 cat $DOCKER_VOL_PATH/setup-env.sh > /etc/profile.d/setup-env.sh && \

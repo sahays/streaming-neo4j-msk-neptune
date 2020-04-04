@@ -17,7 +17,6 @@ services:
         soft: 40000
         hard: 60000
     volumes:
-      - /neo4j/plugins:/plugins
       - shared-folder:/data
     environment:
       NEO4J_AUTH: none
