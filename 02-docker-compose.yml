@@ -49,3 +49,7 @@ services:
       - KAFKA_TOPIC
       - BOOTSTRAP_SERVERS
       - NEPTUNE_HOST
+  gremlin-client:
+    image: sanjeets/neptune-gremlinc-345:latest
+    environment:
+      - NEPTUNE_HOST
