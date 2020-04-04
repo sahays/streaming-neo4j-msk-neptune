@@ -31,7 +31,6 @@ const asyncGetConnectionStrings = async () => {
       mskCluster
     });
     const output = [
-      "#!/bin/bash",
       "export AWS_REGION=" + awsRegion,
       "export BOOTSTRAP_SERVERS=" + connectionStrings.broker,
       "export ZOOKEEPER_CONNECT=" + connectionStrings.zookeeper,
