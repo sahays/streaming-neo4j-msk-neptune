@@ -14,13 +14,14 @@ const { overwriteFile } = require("../lib/utils/write-file");
 // share state using .env files because each command runs in a different context
 
 // const fs = require("fs");
-process.env.CONSTANTS = JSON.stringify({
-  username: "neo4j",
-  password: "pass@word1",
-  neptunePort: 8182,
-  account: process.env.CDK_DEFAULT_ACCOUNT,
-  region: process.env.CDK_DEFAULT_REGION
-});
+// process.env.CONSTANTS = JSON.stringify({
+//   username: "neo4j",
+//   password: "pass@word1",
+//   neptunePort: 8182,
+//   account: process.env.CDK_DEFAULT_ACCOUNT,
+//   region: process.env.CDK_DEFAULT_REGION
+// });
+process.env.NEPTUNE_PORT = 8182;
 
 const app = new cdk.App();
 const defaultEnv = {

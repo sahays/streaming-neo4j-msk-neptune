@@ -27,6 +27,25 @@ class NetworkStack extends cdk.Stack {
     this.MskSg = this.createMskSg(this.CustomVpc, this.InstanceSg);
     // both ways
     this.allowFromMsk();
+    this.createNeptuneSg(this.CustomVpc, this.InstanceSg);
+  }
+
+  createNeptuneSg(customVpc, instanceSg) {
+    const sg = new SecurityGroup(this, "neptune-sg", {
+      vpc: customVpc,
+      allowAllOutbound: true
+    });
+    sg.connections.allowFrom(
+      instanceSg,
+      new Port({
+        protocol: Protocol.TCP,
+        fromPort: parseInt(process.env.NEPTUNE_PORT),
+        toPort: parseInt(process.env.NEPTUNE_PORT),
+        stringRepresentation: "neptune_port from ec2"
+      }),
+      "from ec2"
+    );
+    return sg;
   }
 
   allowFromMsk() {

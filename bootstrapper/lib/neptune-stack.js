@@ -21,7 +21,7 @@ class NeptuneStack extends cdk.Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    this.NeptunePort = this.node.tryGetContext("neptune_port");
+    this.NeptunePort = parseInt(process.env.NEPTUNE_PORT);
     this.NeptuneTrustedRoleArn =
       "arn:aws:iam::" +
       process.env.CDK_DEFAULT_ACCOUNT +

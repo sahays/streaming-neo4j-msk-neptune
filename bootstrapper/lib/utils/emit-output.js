@@ -47,13 +47,6 @@ const EmitOutput = () => {
       value: "http://" + neo4jEc2.instancePublicDnsName + ":7474",
       description: "neo4jBrowser"
     });
-    new cdk.CfnOutput(scope, "Neo4jCredentials", {
-      value: JSON.stringify({
-        username: scope.node.tryGetContext("neo4j_uid"),
-        password: scope.node.tryGetContext("neo4j_pwd")
-      }),
-      description: "Neo4jCredentials"
-    });
   };
 
   const emit = (scope, neo4jEc2, neptuneStack, mskStack, networkStack) => {
