@@ -43,10 +43,10 @@ services:
       NEO4J_dbms_jvm_additional: -Djavax.net.debug=ssl:handshake
       NEO4J_dbms_security_procedures_whitelist: apoc.*,streams.*
       NEO4J_dbms_security_procedures_unrestricted: apoc.*,streams.*
-  msk-consumer-service:
-    build: ./docker-files/msk-consumer-app
-    container_name: msk-consumer-service
-    hostname: msk-consumer
+  transformation-engine-service:
+    build: ./docker-files/transformation-engine
+    container_name: transformation-engine-service
+    hostname: transformation-engine
     command: sh -c "/run-script.sh"
     environment:
       - KAFKA_TOPIC

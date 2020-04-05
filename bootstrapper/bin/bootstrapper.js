@@ -9,27 +9,15 @@ const { NetworkStack } = require("../lib/network-stack");
 const { MskStack } = require("../lib/msk-stack");
 const { Ec2Stack } = require("../lib/ec2-stack");
 
-// steps
-// deploy all stacks except ec2
-// run neptune-add-role and msk-get-servers
-// deploy ec2 stack
-// share state using .env files because each command runs in a different context
-
-// const fs = require("fs");
-// process.env.CONSTANTS = JSON.stringify({
-//   username: "neo4j",
-//   password: "pass@word1",
-//   neptunePort: 8182,
-//   account: process.env.CDK_DEFAULT_ACCOUNT,
-//   region: process.env.CDK_DEFAULT_REGION
-// });
 process.env.NEPTUNE_PORT = 8182;
 
 const app = new cdk.App();
 const defaultEnv = {
   account: process.env.CDK_DEFAULT_ACCOUNT,
-  region: process.env.CDK_DEFAULT_REGION
+  region: process.env.CDK_DEFAULT_REGION,
+  neptunePort: process.env.NEPTUNE_PORT
 };
+console.log(defaultEnv);
 const networkStack = new NetworkStack(app, "streaming-blog-network-stack", {
   env: defaultEnv
 });
@@ -47,5 +35,3 @@ const ec2Stack = new Ec2Stack(app, "streaming-blog-ec2-stack", {
   networkStack: networkStack,
   mskStack: mskStack
 });
-
-// overwriteFile("StackInfo.json.env", JSON.stringify(defaultEnv));

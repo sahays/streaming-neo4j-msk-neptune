@@ -26,7 +26,8 @@ const UserDataScript = () => {
       "export SHARED_FOLDER=/data/",
       "export AWS_REGION=" + process.env.CDK_DEFAULT_REGION,
       "mkdir data",
-      "chmod +x startup.sh && . startup.sh"
+      "rm -rf streaming-neo4j-msk-neptune/ && git clone https://github.com/sahays/streaming-neo4j-msk-neptune.git",
+      "cd /streaming-neo4j-msk-neptune/ && chmod +x startup.sh && . startup.sh"
     ];
     neo4jEc2.addUserData(runAfterDeploy.join("\n"));
   };

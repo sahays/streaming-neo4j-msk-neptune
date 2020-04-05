@@ -13,6 +13,8 @@ class NetworkStack extends cdk.Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
+    const { env } = props;
+
     this.CustomVpc = new Vpc(this, "vpc", {
       cidr: this.node.tryGetContext("vpc_cidr"),
       maxAzs: 2,
@@ -30,10 +32,10 @@ class NetworkStack extends cdk.Stack {
     this.MskSg = this.createMskSg(this.CustomVpc, this.InstanceSg);
     // both ways
     this.allowFromMsk();
-    this.createNeptuneSg(this.CustomVpc, this.InstanceSg);
+    this.createNeptuneSg(this.CustomVpc, this.InstanceSg, env);
   }
 
-  createNeptuneSg(customVpc, instanceSg) {
+  createNeptuneSg(customVpc, instanceSg, env) {
     const sg = new SecurityGroup(this, "neptune-sg", {
       vpc: customVpc,
       allowAllOutbound: true
@@ -42,8 +44,8 @@ class NetworkStack extends cdk.Stack {
       instanceSg,
       new Port({
         protocol: Protocol.TCP,
-        fromPort: parseInt(process.env.NEPTUNE_PORT),
-        toPort: parseInt(process.env.NEPTUNE_PORT),
+        fromPort: parseInt(env.neptunePort),
+        toPort: parseInt(env.neptunePort),
         stringRepresentation: "neptune_port from ec2"
       }),
       "from ec2"

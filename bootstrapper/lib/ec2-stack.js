@@ -17,7 +17,6 @@ const {
 } = require("@aws-cdk/aws-iam");
 const { UserDataScript } = require("./utils/userdata-script");
 const { EmitOutput } = require("./utils/emit-output");
-const { fileToJson } = require("./utils/read-file");
 
 class Ec2Stack extends cdk.Stack {
   S3Bucket;

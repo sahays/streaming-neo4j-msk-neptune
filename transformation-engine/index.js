@@ -6,7 +6,7 @@ const gremlin = require("gremlin");
 
 const config = {
   neptuneEndpoint: process.env.NEPTUNE_HOST,
-  clientId: "msk-consumer-app",
+  clientId: "transformation-engine",
   ssl: true,
   kafkaBrokers: process.env.BOOTSTRAP_SERVERS.split(","),
   groupId: "neo4j",

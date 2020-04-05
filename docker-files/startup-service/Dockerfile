@@ -11,4 +11,3 @@ COPY run-script.sh .
 RUN chmod +x run-script.sh
 RUN apk add git
 
-# export GitTag=`git log -1 --pretty=%h` && docker image build -t sanjeets/streaming-blog-after-deploy:$GitTag .

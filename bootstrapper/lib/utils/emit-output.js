@@ -27,10 +27,6 @@ const EmitOutput = () => {
       value: neptuneStack.NeptuneDBCluster.attrEndpoint,
       description: "Neptune cluster"
     });
-    new cdk.CfnOutput(scope, "NeptuneTrustedRole", {
-      value: neptuneStack.NeptuneTrustedRoleArn,
-      description: "Neptune cluster IAM role"
-    });
   };
 
   const emitNeo4jStackOutputs = (scope, neo4jEc2) => {

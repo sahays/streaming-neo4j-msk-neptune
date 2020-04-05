@@ -16,16 +16,8 @@ const describeMskStack = fileToJson(
 const neptuneStack = describeNeptuneStack.Stacks[0];
 const mskStack = describeMskStack.Stacks[0];
 const neptuneClusterEnpoint = neptuneStack.Outputs[0].OutputValue;
-const neptuneClusterIdentifier = neptuneStack.Outputs[1].OutputValue;
-const neptuneIamRoleArn = neptuneStack.Outputs[2].OutputValue;
 const mskCluster = mskStack.Outputs[0].OutputValue;
 const awsRegion = process.env.AWS_REGION;
-
-addNeptuneIamRole({
-  neptuneClusterIdentifier,
-  neptuneIamRoleArn,
-  region: awsRegion
-});
 
 const asyncGetConnectionStrings = async () => {
   try {

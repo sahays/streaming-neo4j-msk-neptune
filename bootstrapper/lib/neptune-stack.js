@@ -12,50 +12,25 @@ const {
   CfnDBClusterParameterGroup
 } = require("@aws-cdk/aws-neptune");
 const { SecurityGroup, Peer, Port, Protocol } = require("@aws-cdk/aws-ec2");
-// const { Output } = require("./shared/output");
 
 class NeptuneStack extends cdk.Stack {
   NeptuneDBClusterIdentifier = "NeptuneDBCluster";
   NeptuneDBCluster;
-  NeptuneTrustedRoleName = "NeptuneTrustedS3Role";
-  NeptuneTrustedRoleArn;
   NeptunePort;
 
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    this.NeptunePort = parseInt(process.env.NEPTUNE_PORT);
-    this.NeptuneTrustedRoleArn =
-      "arn:aws:iam::" +
-      process.env.CDK_DEFAULT_ACCOUNT +
-      ":role/" +
-      this.NeptuneTrustedRoleName;
-
-    const { customVpc } = props;
-
+    const { customVpc, env } = props;
+    this.NeptunePort = parseInt(env.neptunePort);
     this.NeptuneDBCluster = this.createNeptuneCluster(customVpc);
-    this.createNeptuneTrustedS3Role();
     this.emitOutput();
   }
 
   emitOutput() {
-    new cdk.CfnOutput(this, "NeptuneTrustedRole", {
-      value: this.NeptuneTrustedRoleArn,
-      description: "Neptune cluster IAM role"
-    });
     new cdk.CfnOutput(this, "NeptuneDBClusterIdentifier", {
       value: this.NeptuneDBClusterIdentifier,
       description: "Neptune cluster identifier"
-    });
-  }
-
-  createNeptuneTrustedS3Role() {
-    return new Role(this, "NeptuneTrustedS3Role", {
-      assumedBy: new ServicePrincipal("rds.amazonaws.com"),
-      roleName: this.NeptuneTrustedRoleName,
-      managedPolicies: [
-        ManagedPolicy.fromAwsManagedPolicyName("AmazonS3ReadOnlyAccess")
-      ]
     });
   }
 
