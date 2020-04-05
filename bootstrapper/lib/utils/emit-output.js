@@ -23,13 +23,8 @@ const EmitOutput = () => {
       value: neptuneStack.NeptuneDBClusterIdentifier,
       description: "Neptune cluster"
     });
-    new cdk.CfnOutput(scope, "LoaderEndpoint", {
-      value:
-        "https://" +
-        neptuneStack.NeptuneDBCluster.attrEndpoint +
-        ":" +
-        neptuneStack.NeptunePort +
-        "/loader",
+    new cdk.CfnOutput(scope, "NeptuneClusterEndpoint", {
+      value: neptuneStack.NeptuneDBCluster.attrEndpoint,
       description: "Neptune cluster"
     });
     new cdk.CfnOutput(scope, "NeptuneTrustedRole", {
@@ -42,10 +37,6 @@ const EmitOutput = () => {
     new cdk.CfnOutput(scope, "Neo4jEc2Instance", {
       value: neo4jEc2.instanceId,
       description: "EC2 instance for Neo4j"
-    });
-    new cdk.CfnOutput(scope, "Neo4jBrowser", {
-      value: "http://" + neo4jEc2.instancePublicDnsName + ":7474",
-      description: "neo4jBrowser"
     });
   };
 

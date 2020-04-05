@@ -4,7 +4,7 @@
 FROM node:alpine3.11
 
 ENV AWS_REGION=us-west-2
-ENV CONFIG_OUTPUT_PATH=/data/
+ENV SHARED_FOLDER=/data
 
 WORKDIR /
 COPY run-script.sh .

@@ -20,7 +20,6 @@ const neptuneClusterIdentifier = neptuneStack.Outputs[1].OutputValue;
 const neptuneIamRoleArn = neptuneStack.Outputs[2].OutputValue;
 const mskCluster = mskStack.Outputs[0].OutputValue;
 const awsRegion = process.env.AWS_REGION;
-// const outputPath = process.env.CONFIG_OUTPUT_PATH || "";
 
 addNeptuneIamRole({
   neptuneClusterIdentifier,
