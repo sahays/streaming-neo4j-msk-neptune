@@ -5,7 +5,7 @@ const cdk = require("@aws-cdk/core");
 
 const EmitOutput = () => {
   const emitNetworkStackOutputs = (scope, networkStack) => {
-    new cdk.CfnOutput(scope, "VpcId", {
+    new cdk.CfnOutput(scope, "VpcID", {
       value: networkStack.CustomVpc.vpcId,
       description: "VPC Id"
     });
@@ -30,9 +30,9 @@ const EmitOutput = () => {
   };
 
   const emitNeo4jStackOutputs = (scope, neo4jEc2) => {
-    new cdk.CfnOutput(scope, "Neo4jEc2Instance", {
+    new cdk.CfnOutput(scope, "Ec2Instance", {
       value: neo4jEc2.instanceId,
-      description: "EC2 instance for Neo4j"
+      description: "EC2 instance for containers"
     });
   };
 
