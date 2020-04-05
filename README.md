@@ -72,7 +72,11 @@ You should be able to see the following 3 docker container services:
 | neo4j-service          | runs the Neo4j graph database version 3.5.6                                                  |
 | startup-service        | runs the startup docker that fetches endpoint information from Amazon Neptune and Amazon MSK |
 
-If you want to check the logs, run the following commands
+If you want to check the logs, run the following command:
+
+```
+docker container logs transformation-service
+```
 
 # Cleaning up
 
