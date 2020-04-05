@@ -6,9 +6,9 @@ volumes:
   shared-folder:
 services:
   neo4j:
-    build: ./docker-files/neo4j
+    build: ./docker-files/neo4j-service
     container_name: neo4j-service
-    hostname: neo4j
+    hostname: neo4j-service
     ports:
       - "7474:7474"
       - "7687:7687"

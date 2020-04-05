@@ -61,10 +61,10 @@ SSH into the Amazon EC2 instances created by the app. To see a list of all
 running containers run the following command:
 
 ```
-docker container ls
+docker container ls -a
 ```
 
-You should be able to see the following 3 docker container services running:
+You should be able to see the following 3 docker container services:
 
 | Container name         | Purpose                                                                                      |
 | ---------------------- | -------------------------------------------------------------------------------------------- |
