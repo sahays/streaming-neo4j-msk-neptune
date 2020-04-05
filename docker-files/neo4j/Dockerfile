@@ -1,3 +1,6 @@
+# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+
 FROM neo4j:3.5.6
 ENV NEO4J_AUTH=none
 RUN apt-get update && apt-get install -y wget

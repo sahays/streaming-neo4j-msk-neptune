@@ -1,3 +1,6 @@
+// Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
+
 const { fileToJson } = require("../utils/read-file");
 const { overwriteFile } = require("../utils/write-file");
 const { addNeptuneIamRole } = require("./neptune-add-role");

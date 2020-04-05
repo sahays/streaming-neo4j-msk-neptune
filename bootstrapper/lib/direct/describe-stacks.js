@@ -1,3 +1,6 @@
+// Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
+
 const AWS = require("aws-sdk");
 const { overwriteFile } = require("../utils/write-file");
 const sharedFolder = process.env.SHARED_FOLDER || "/data";

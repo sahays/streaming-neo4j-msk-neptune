@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 
+// Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
+
 const cdk = require("@aws-cdk/core");
 const { NeptuneStack } = require("../lib/neptune-stack");
 const { NetworkStack } = require("../lib/network-stack");
 const { MskStack } = require("../lib/msk-stack");
 const { Ec2Stack } = require("../lib/ec2-stack");
-const { overwriteFile } = require("../lib/utils/write-file");
 
 // steps
 // deploy all stacks except ec2

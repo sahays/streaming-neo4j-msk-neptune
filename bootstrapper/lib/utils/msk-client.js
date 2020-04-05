@@ -1,3 +1,6 @@
+// Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
+
 const AWS = require("aws-sdk");
 const MskClient = (region) => {
   const kafka = new AWS.Kafka({ apiVersion: "2018-11-14", region });
