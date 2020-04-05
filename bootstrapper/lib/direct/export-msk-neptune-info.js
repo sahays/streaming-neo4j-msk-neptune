@@ -3,7 +3,6 @@
 
 const { fileToJson } = require("../utils/read-file");
 const { overwriteFile } = require("../utils/write-file");
-const { addNeptuneIamRole } = require("./neptune-add-role");
 const { getMskConnectionString, createConfiguration } = require("./msk-setup");
 const sharedFolder = process.env.SHARED_FOLDER || "/data";
 
