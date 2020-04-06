@@ -66,16 +66,17 @@ docker container ls -a
 
 You should be able to see the following 3 docker container services:
 
-| Container name         | Purpose                                                                                      |
+| Service name           | Purpose                                                                                      |
 | ---------------------- | -------------------------------------------------------------------------------------------- |
 | transformation-service | runs the transformation engine that transforms Neo4j data to Amazon Neptune data format      |
 | neo4j-service          | runs the Neo4j graph database version 3.5.6                                                  |
 | startup-service        | runs the startup docker that fetches endpoint information from Amazon Neptune and Amazon MSK |
+| kafka-topic-service    | creates a new topic in Amazon MSK                                                            |
 
-If you want to check the logs, run the following command:
+If you want to see logs for a service, run the following command:
 
 ```
-docker container logs transformation-service
+docker container logs <service-name>
 ```
 
 # Cleaning up
