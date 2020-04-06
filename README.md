@@ -1,6 +1,6 @@
 # Architecture
 
-![AWS Architecture](images/streaming-high-level.jpg)
+![AWS Architecture](images/high-level.png)
 
 # Prerequisites
 
@@ -54,6 +54,10 @@ you'll see an output similar to the following:
 | .EC2Instance                | Amazon EC2 instance Id                         |
 | .NeptuneDbClusterIdentifier | Cluster name for the Amazon Neptune DB cluster |
 | .NeptuneClusterEndpoint     | Endpoint of the Amazon Neptune DB cluster      |
+
+## Detailed architecture
+
+![EC2 output](images/services.png)
 
 ## Post deploy steps
 
