@@ -83,6 +83,89 @@ If you want to see logs for a service, run the following command:
 docker container logs <service-name>
 ```
 
+## Execute cypher scripts
+
+To execute cypher scripts you need to enter the `neo4j-service` container using
+the following command
+
+```
+docker container exec -it neo4j-service cypher-shell
+```
+
+then execute a simple create command like the following
+
+```
+CREATE (TheMatrix:Movie {title:'The Matrix', released:1999, tagline:'Welcome to the Real World'});
+CREATE (Keanu:Person {name:'Keanu Reeves', born:1964});
+CREATE (Keanu)-[:ACTED_IN {roles:['Neo']}]->(TheMatrix);
+```
+
+Next, see the `transformation-service` logs by executing
+
+```
+docker container logs transformation-service
+```
+
+you should see an output similar to the following:
+
+```
+processing node {
+  id: '0',
+  before: null,
+  after: {
+    properties: {
+      tagline: 'Welcome to the Real World',
+      title: 'The Matrix',
+      released: 1999
+    },
+    labels: [ 'Movie' ]
+  },
+  type: 'node'
+}
+inserted 0 {
+  properties: {
+    tagline: 'Welcome to the Real World',
+    title: 'The Matrix',
+    released: 1999
+  },
+  labels: [ 'Movie' ]
+}
+Movie
+processing node {
+  id: '20',
+  before: null,
+  after: {
+    properties: { born: 1964, name: 'Keanu Reeves' },
+    labels: [ 'Person' ]
+  },
+  type: 'node'
+}
+inserted 20 {
+  properties: { born: 1964, name: 'Keanu Reeves' },
+  labels: [ 'Person' ]
+}
+Person
+```
+
+Finally, to confirm that Amazon Neptune has been updated with streaming data run
+the following commands in order
+
+```
+docker run -it -e NEPTUNE_HOST --entrypoint /replace-host.sh sanjeets/neptune-gremlinc-345
+```
+
+```
+:remote console
+```
+
+```
+g.V().count()
+```
+
+## Query architecture
+
+![Queries](images/queries.png)
+
 # Cleaning up
 
 To cleanup AWS resources you need to run the following command:
