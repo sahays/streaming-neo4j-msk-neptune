@@ -12,7 +12,7 @@
     "deploy-neptune": "cdk deploy streaming-blog-neptune-stack && aws cloudformation describe-stacks --stack-name streaming-blog-neptune-stack > streaming-blog-neptune-stack.json.env",
     "deploy-msk": "cdk deploy streaming-blog-msk-stack && aws cloudformation describe-stacks --stack-name streaming-blog-msk-stack > streaming-blog-msk-stack.json.env",
     "deploy-ec2": "cdk deploy streaming-blog-ec2-stack && aws cloudformation describe-stacks --stack-name streaming-blog-ec2-stack > streaming-blog-ec2-stack.json.env",
-    "deploy": "cdk deploy *-stack",
+    "deploy": "node third-party-agreement.js && cdk deploy *-stack",
     "reset": "cdk destroy streaming-blog-ec2-stack && cdk deploy *-stack",
     "destroy": "cdk destroy *-stack"
   },
