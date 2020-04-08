@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT-0
 
 const UserDataScript = () => {
-  const setupDockerScript = (neo4jEc2) => {
+  const setupDockerScript = (neo4jEc2, node) => {
     const installDocker = [
       "sudo su #",
       "cd /",
@@ -23,13 +23,11 @@ const UserDataScript = () => {
     neo4jEc2.addUserData(installDockerCompose.join("\n"));
 
     const runAfterDeploy = [
-      "export SHARED_FOLDER=/data/",
       "export AWS_REGION=" + process.env.CDK_DEFAULT_REGION,
-      "export SOURCE_TOPIC_NODES=" + process.env.SOURCE_TOPIC_NODES,
+      "export SOURCE_TOPIC_NODES=" + node.tryGetContext("SOURCE_TOPIC_NODES"),
       "export SOURCE_TOPIC_RELATIONSHIPS=" +
-        process.env.SOURCE_TOPIC_RELATIONSHIPS,
-      "export KAFKA_TOPIC=" + process.env.KAFKA_TOPIC,
-      "mkdir -p data",
+        node.tryGetContext("SOURCE_TOPIC_RELATIONSHIPS"),
+      "export KAFKA_TOPIC=" + node.tryGetContext("KAFKA_TOPIC"),
       "rm -rf streaming-neo4j-msk-neptune/ && git clone https://github.com/sahays/streaming-neo4j-msk-neptune.git",
       "cd /streaming-neo4j-msk-neptune/ && chmod +x startup.sh && . startup.sh"
     ];

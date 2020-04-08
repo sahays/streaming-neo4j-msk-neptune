@@ -34,19 +34,8 @@ class Ec2Stack extends cdk.Stack {
     const neo4jEc2 = this.createEc2(CustomVpc, InstanceSg);
     this.Neo4jEc2 = neo4jEc2;
     this.attachIamPolicies();
-    setupDockerScript(neo4jEc2);
-    this.setEnv();
+    setupDockerScript(neo4jEc2, this.node);
     emit(this, this.Neo4jEc2, neptuneStack, mskStack, networkStack);
-  }
-
-  setEnv() {
-    process.env.SOURCE_TOPIC_NODES = this.node.tryGetContext(
-      "SOURCE_TOPIC_NODES"
-    );
-    process.env.SOURCE_TOPIC_RELATIONSHIPS = this.node.tryGetContext(
-      "SOURCE_TOPIC_RELATIONSHIPS"
-    );
-    process.env.KAFKA_TOPIC = this.node.tryGetContext("KAFKA_TOPIC");
   }
 
   attachIamPolicies() {

@@ -3,7 +3,7 @@
 
 const AWS = require("aws-sdk");
 const { overwriteFile } = require("../utils/write-file");
-const sharedFolder = process.env.SHARED_FOLDER || "/data";
+const sharedFolder = "/data";
 
 const describeStack = async () => {
   const cfnArgs = {
