@@ -41,7 +41,7 @@ class NeptuneStack extends cdk.Stack {
     });
 
     neptuneSg.addIngressRule(
-      Peer.ipv4(this.node.tryGetContext("sg_fromIp")),
+      Peer.ipv4(this.node.tryGetContext("SG_FROM_IP")),
       new Port({
         protocol: Protocol.TCP,
         stringRepresentation: "neptune console",
@@ -50,7 +50,7 @@ class NeptuneStack extends cdk.Stack {
       })
     );
     neptuneSg.addIngressRule(
-      Peer.ipv4(this.node.tryGetContext("sg_fromIp")),
+      Peer.ipv4(this.node.tryGetContext("SG_FROM_IP")),
       new Port({
         protocol: Protocol.TCP,
         stringRepresentation: "neptune ssh",
@@ -98,7 +98,7 @@ class NeptuneStack extends cdk.Stack {
       description: "some dbpg"
     });
     const neptuneDb = new CfnDBInstance(this, "NeptuneDBInstance", {
-      dbInstanceClass: "db.r5.large",
+      dbInstanceClass: this.node.tryGetContext("NEPTUNE_DB_INSTANCE_TYPE"),
       dbParameterGroupName: dbpg.dbParameterGroupName
     });
     neptuneDb.addOverride("Properties.DBClusterIdentifier", {

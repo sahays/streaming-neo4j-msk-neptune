@@ -16,7 +16,7 @@ class NetworkStack extends cdk.Stack {
     const { env } = props;
 
     this.CustomVpc = new Vpc(this, "vpc", {
-      cidr: this.node.tryGetContext("vpc_cidr"),
+      cidr: this.node.tryGetContext("VPC_CIDR"),
       maxAzs: 2,
       natGateways: 0,
       subnetConfiguration: [

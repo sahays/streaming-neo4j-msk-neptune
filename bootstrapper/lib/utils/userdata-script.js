@@ -25,6 +25,10 @@ const UserDataScript = () => {
     const runAfterDeploy = [
       "export SHARED_FOLDER=/data/",
       "export AWS_REGION=" + process.env.CDK_DEFAULT_REGION,
+      "export SOURCE_TOPIC_NODES=" + process.env.SOURCE_TOPIC_NODES,
+      "export SOURCE_TOPIC_RELATIONSHIPS=" +
+        process.env.SOURCE_TOPIC_RELATIONSHIPS,
+      "export KAFKA_TOPIC=" + process.env.KAFKA_TOPIC,
       "mkdir -p data",
       "rm -rf streaming-neo4j-msk-neptune/ && git clone https://github.com/sahays/streaming-neo4j-msk-neptune.git",
       "cd /streaming-neo4j-msk-neptune/ && chmod +x startup.sh && . startup.sh"

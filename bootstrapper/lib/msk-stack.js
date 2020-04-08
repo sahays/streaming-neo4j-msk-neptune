@@ -30,7 +30,7 @@ class MskStack extends cdk.Stack {
       clusterName: "streaming-neo4j-neptune-cluster",
       brokerNodeGroupInfo: {
         clientSubnets: clientSubnets,
-        instanceType: "kafka.m5.large",
+        instanceType: this.node.tryGetContext("KAFKA_BROKER_INSTANCE_TYPE"),
         securityGroups: [mskSg.securityGroupId]
       }
     });

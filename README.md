@@ -47,7 +47,7 @@ After successful run of the program (it takes about 10 minutes to complete),
 you'll see an output similar to the following:
 ![EC2 output](images/ec2-output.png)
 
-| Variable                    | Purpose                                        |
+| Output                      | Purpose                                        |
 | --------------------------- | ---------------------------------------------- |
 | .VpcID                      | Amazon VPC Id that contains all the resources  |
 | .MSKCluster                 | Amazon Managed Service for Kafka cluster ARN   |
@@ -70,12 +70,12 @@ docker container ls -a
 
 You should be able to see the following 3 docker container services:
 
-| Service name           | Purpose                                                                                      |
-| ---------------------- | -------------------------------------------------------------------------------------------- |
-| transformation-service | runs the transformation engine that transforms Neo4j data to Amazon Neptune data format      |
-| neo4j-service          | runs the Neo4j graph database version 3.5.6                                                  |
-| startup-service        | runs the startup docker that fetches endpoint information from Amazon Neptune and Amazon MSK |
-| kafka-topic-service    | creates a new topic in Amazon MSK                                                            |
+| Service name           | Purpose                                                                                      | Status  |
+| ---------------------- | -------------------------------------------------------------------------------------------- | ------- |
+| transformation-service | runs the transformation engine that transforms Neo4j data to Amazon Neptune data format      | Running |
+| neo4j-service          | runs the Neo4j graph database version 3.5.6                                                  | Running |
+| startup-service        | runs the startup docker that fetches endpoint information from Amazon Neptune and Amazon MSK | Stopped |
+| kafka-topic-service    | creates a new topic in Amazon MSK                                                            | Stopped |
 
 If you want to see logs for a service, run the following command:
 
@@ -164,7 +164,49 @@ g.V().count()
 
 ## Query architecture
 
-![Queries](images/queries.png)
+The following code snippet shows the docker-compose environment section of the
+Neo4j service. This allows Neo4j to become a source of events for Kafka
+connector.
+
+```
+NEO4J_AUTH: none
+NEO4J_dbms_logs_debug_level: DEBUG
+# KAFKA related configuration
+NEO4J_kafka_zookeeper_connect: ${ZOOKEEPER_CONNECT}
+NEO4J_kafka_bootstrap_servers: ${BOOTSTRAP_SERVERS}
+NEO4J_kafka_security_protocol: SSL
+NEO4J_kafka_ssl_truststore_location: /var/lib/neo4j/temp/kafka.client.truststore.jks
+NEO4J_kafka_acks: 1
+NEO4J_kafka_num_partitions: 1
+NEO4J_kafka_retries: 2
+# streams
+NEO4J_streams_procedures_enabled: "true"
+NEO4J_streams_source_enabled: "true"
+NEO4J_streams_source_topic_nodes_neo4j: Person{*};Movie{*}
+NEO4J_streams_source_topic_relationships_neo4j: ACTED_IN{*}
+NEO4J_streams_source_schema_polling_interval: 10000
+# other
+NEO4J_apoc_trigger_enabled: "true"
+NEO4J_dbms_jvm_additional: -Djavax.net.debug=ssl:handshake
+NEO4J_dbms_security_procedures_whitelist: apoc.*,streams.*
+NEO4J_dbms_security_procedures_unrestricted: apoc.*,streams.*
+```
+
+The following code snippet shows the nodes and relationships that are configured
+to be the source of events for the Kafka connector. This ensures that whenever
+you perform CTUD operations on these nodes and relationships Neo4j will send
+changed data to Kafka. The `transformation-service` on the other had will
+recieve these data changes and will update Amazon Neptune
+
+```
+NEO4J_streams_source_topic_nodes_neo4j: Person{*};Movie{*}
+NEO4J_streams_source_topic_relationships_neo4j: ACTED_IN{*}
+```
+
+The following architecture shows how `neo4j-service` works with
+`transformation-service` and Amazon Managed Service for Kafka.
+
+![Queries](images/query-architecture.png)
 
 # Cleaning up
 

@@ -35,7 +35,18 @@ class Ec2Stack extends cdk.Stack {
     this.Neo4jEc2 = neo4jEc2;
     this.attachIamPolicies();
     setupDockerScript(neo4jEc2);
+    this.setEnv();
     emit(this, this.Neo4jEc2, neptuneStack, mskStack, networkStack);
+  }
+
+  setEnv() {
+    process.env.SOURCE_TOPIC_NODES = this.node.tryGetContext(
+      "SOURCE_TOPIC_NODES"
+    );
+    process.env.SOURCE_TOPIC_RELATIONSHIPS = this.node.tryGetContext(
+      "SOURCE_TOPIC_RELATIONSHIPS"
+    );
+    process.env.KAFKA_TOPIC = this.node.tryGetContext("KAFKA_TOPIC");
   }
 
   attachIamPolicies() {
@@ -116,8 +127,8 @@ class Ec2Stack extends cdk.Stack {
     const neo4jEc2 = new Instance(this, "neo4j", {
       vpc: customVpc,
       instanceType: InstanceType.of(
-        this.node.tryGetContext("ec2_class"),
-        this.node.tryGetContext("ec2_type")
+        this.node.tryGetContext("EC2_CLASS"),
+        this.node.tryGetContext("EC2_TYPE")
       ),
       machineImage: new AmazonLinuxImage({
         generation: AmazonLinuxGeneration.AMAZON_LINUX_2
@@ -138,7 +149,7 @@ class Ec2Stack extends cdk.Stack {
         subnets: customVpc.publicSubnets
       },
       securityGroup: instanceSg,
-      keyName: this.node.tryGetContext("ec2_key_pair")
+      keyName: this.node.tryGetContext("EC2_KEY_PAIR")
     });
     return neo4jEc2;
   }

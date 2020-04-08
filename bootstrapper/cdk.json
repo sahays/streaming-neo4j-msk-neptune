@@ -1,10 +1,15 @@
 {
   "app": "node bin/bootstrapper.js",
   "context": {
-    "vpc_cidr": "192.168.0.0/16",
-    "ec2_class": "t3a",
-    "ec2_type": "xlarge",
-    "ec2_key_pair": "eu-west-2-key-pair-02082020",
-    "sg_fromIp": "0.0.0.0/0"
+    "VPC_CIDR": "192.168.0.0/16",
+    "EC2_CLASS": "t3a",
+    "EC2_TYPE": "xlarge",
+    "EC2_KEY_PAIR": "eu-west-2-key-pair-02082020",
+    "SG_FROM_IP": "0.0.0.0/0",
+    "KAFKA_BROKER_INSTANCE_TYPE": "kafka.m5.large",
+    "NEPTUNE_DB_INSTANCE_TYPE": "db.r5.large",
+    "SOURCE_TOPIC_NODES": "Person{*};Movie{*}",
+    "SOURCE_TOPIC_RELATIONSHIPS": "ACTED_IN{*}",
+    "KAFKA_TOPIC": "graph-cdc"
   }
 }

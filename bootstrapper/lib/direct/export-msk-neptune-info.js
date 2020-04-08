@@ -27,7 +27,10 @@ const asyncGetConnectionStrings = async () => {
       "export AWS_REGION=" + awsRegion,
       "export BOOTSTRAP_SERVERS=" + connectionStrings.broker,
       "export ZOOKEEPER_CONNECT=" + connectionStrings.zookeeper,
-      "export KAFKA_TOPIC=neo4j",
+      "export KAFKA_TOPIC=" + process.env.KAFKA_TOPIC,
+      "export SOURCE_TOPIC_NODES=" + process.env.SOURCE_TOPIC_NODES,
+      "export SOURCE_TOPIC_RELATIONSHIPS=" +
+        process.env.SOURCE_TOPIC_RELATIONSHIPS,
       "export NEPTUNE_HOST=" + neptuneClusterEnpoint // for docker gremlin
     ];
     overwriteFile(sharedFolder + "/setup-env.sh", output.join("\n"));
