@@ -40,7 +40,7 @@ const run = async () => {
   const consumer = kafka.consumer({ groupId: config.groupId });
 
   // Consuming
-  const maxRetries = 30;
+  let maxRetries = 30;
   const token = setInterval(async () => {
     maxRetries--;
     console.log(maxRetries, "retries left");
