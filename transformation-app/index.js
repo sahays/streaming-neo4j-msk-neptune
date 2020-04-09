@@ -10,7 +10,7 @@ const config = {
   ssl: true,
   kafkaBrokers: process.env.BOOTSTRAP_SERVERS.split(","),
   groupId: "neo4j",
-  kafkaTopic: process.env.KAFKA_TOPIC
+  kafkaTopic: process.env.KAFKA_TOPIC,
 };
 
 const makeG = () => {
@@ -29,7 +29,7 @@ const makeG = () => {
 const kafka = new Kafka({
   clientId: config.clientId,
   ssl: config.ssl,
-  brokers: config.kafkaBrokers
+  brokers: config.kafkaBrokers,
 });
 
 console.log(config);
@@ -40,9 +40,26 @@ const run = async () => {
   const consumer = kafka.consumer({ groupId: config.groupId });
 
   // Consuming
-  await consumer.connect();
+  try {
+    await consumer.connect();
+  } catch (e) {
+    console.log("error connecting", e);
+  }
 
-  await consumer.subscribe({ topic: config.kafkaTopic, fromBeginning: true });
+  const retrySubscription = async () => {
+    try {
+      await consumer.subscribe({
+        topic: config.kafkaTopic,
+        fromBeginning: true,
+      });
+      clearInterval(token);
+      console.log("subscribed");
+    } catch (e) {
+      console.log("error subscribing, retrying...", e);
+    }
+  };
+
+  const token = setInterval(retrySubscription, 5000);
 
   const g = makeG();
 
@@ -53,7 +70,7 @@ const run = async () => {
         if (result.meta && result.payload) {
           const payload = result.payload;
           const {
-            t: { id }
+            t: { id },
           } = gremlin.process;
           if (payload && payload.type === "node") {
             console.log("processing node", payload);
@@ -62,9 +79,7 @@ const run = async () => {
               // edited
               const edited = payload.after.properties;
               console.log("edited", payloadId, payload.before, payload.after);
-              g.V(payloadId)
-                .properties(edited)
-                .next();
+              g.V(payloadId).properties(edited).next();
             } else if (payload.after) {
               // inserted
               console.log("inserted", payloadId, payload.after);
@@ -99,7 +114,7 @@ const run = async () => {
           }
         }
       }
-    }
+    },
   });
 };
 
