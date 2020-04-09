@@ -10,6 +10,6 @@
     "NEPTUNE_DB_INSTANCE_TYPE": "db.r5.large",
     "SOURCE_TOPIC_NODES": "Person{*};Movie{*}",
     "SOURCE_TOPIC_RELATIONSHIPS": "ACTED_IN{*}",
-    "KAFKA_TOPIC": "graph-cdc"
+    "KAFKA_TOPIC": "graphstream"
   }
 }
