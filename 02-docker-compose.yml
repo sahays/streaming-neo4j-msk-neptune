@@ -44,8 +44,8 @@ services:
       # streams
       NEO4J_streams_procedures_enabled: "true"
       NEO4J_streams_source_enabled: "true"
-      NEO4J_streams_source_topic_nodes_*: ${SOURCE_TOPIC_NODES}
-      NEO4J_streams_source_topic_relationships_*: ${SOURCE_TOPIC_RELATIONSHIPS}
+      "NEO4J_streams_source_topic_nodes_${KAFKA_TOPIC}: ${SOURCE_TOPIC_NODES}"
+      "NEO4J_streams_source_topic_relationships_${KAFKA_TOPIC}: ${SOURCE_TOPIC_RELATIONSHIPS}"
       NEO4J_streams_source_schema_polling_interval: 10000
       # other
       NEO4J_apoc_trigger_enabled: "true"
