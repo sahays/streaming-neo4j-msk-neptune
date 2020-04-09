@@ -16,7 +16,6 @@ const neptuneStack = describeNeptuneStack.Stacks[0];
 const mskStack = describeMskStack.Stacks[0];
 const neptuneClusterEnpoint = neptuneStack.Outputs[0].OutputValue;
 const mskCluster = mskStack.Outputs[0].OutputValue;
-const awsRegion = process.env.AWS_REGION;
 
 const asyncGetConnectionStrings = async () => {
   try {
@@ -24,13 +23,8 @@ const asyncGetConnectionStrings = async () => {
       mskCluster
     });
     const output = [
-      "export AWS_REGION=" + awsRegion,
       "export BOOTSTRAP_SERVERS=" + connectionStrings.broker,
       "export ZOOKEEPER_CONNECT=" + connectionStrings.zookeeper,
-      "export KAFKA_TOPIC=" + process.env.KAFKA_TOPIC,
-      "export SOURCE_TOPIC_NODES=" + process.env.SOURCE_TOPIC_NODES,
-      "export SOURCE_TOPIC_RELATIONSHIPS=" +
-        process.env.SOURCE_TOPIC_RELATIONSHIPS,
       "export NEPTUNE_HOST=" + neptuneClusterEnpoint // for docker gremlin
     ];
     overwriteFile(sharedFolder + "/setup-env.sh", output.join("\n"));
