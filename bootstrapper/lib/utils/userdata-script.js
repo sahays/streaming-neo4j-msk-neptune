@@ -26,9 +26,9 @@ const UserDataScript = () => {
       "echo export AWS_REGION=" +
         process.env.CDK_DEFAULT_REGION +
         " >> /etc/profile.d/user-data-export.sh",
-      "echo export SOURCE_TOPIC_NODES='" +
+      "echo export SOURCE_TOPIC_NODES=\"'" +
         node.tryGetContext("SOURCE_TOPIC_NODES") +
-        "' >> /etc/profile.d/user-data-export.sh",
+        "'\" >> /etc/profile.d/user-data-export.sh",
       "echo export SOURCE_TOPIC_RELATIONSHIPS=" +
         node.tryGetContext("SOURCE_TOPIC_RELATIONSHIPS") +
         " >> /etc/profile.d/user-data-export.sh",
