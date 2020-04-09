@@ -23,7 +23,7 @@ const UserDataScript = () => {
     neo4jEc2.addUserData(installDockerCompose.join("\n"));
 
     const runAfterDeploy = [
-      "export AWS_REGION=" +
+      "echo export AWS_REGION=" +
         process.env.CDK_DEFAULT_REGION +
         " >> /etc/profile.d/user-data-export.sh",
       "echo export SOURCE_TOPIC_NODES=" +
