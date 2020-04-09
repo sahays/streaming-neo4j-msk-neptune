@@ -46,9 +46,7 @@ const run = async () => {
     console.log("error connecting", e);
   }
 
-  const token = setInterval(retrySubscription, 5000);
-
-  const retrySubscription = async () => {
+  const token = setInterval(async () => {
     try {
       await consumer.subscribe({
         topic: config.kafkaTopic,
@@ -59,7 +57,7 @@ const run = async () => {
     } catch (e) {
       console.log("error subscribing, retrying...", e);
     }
-  };
+  }, 5000);
 
   const g = makeG();
 
