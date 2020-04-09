@@ -1,6 +1,3 @@
-# set region
-yum install -y jq
-export AWS_REGION=`curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq .region -r`
 # tear down if setup already
 docker-compose -f 02-docker-compose.yml down --remove-orphans
 docker-compose -f 01-docker-compose.yml down --remove-orphans

@@ -23,11 +23,19 @@ const UserDataScript = () => {
     neo4jEc2.addUserData(installDockerCompose.join("\n"));
 
     const runAfterDeploy = [
-      "export AWS_REGION=" + process.env.CDK_DEFAULT_REGION,
-      "export SOURCE_TOPIC_NODES=" + node.tryGetContext("SOURCE_TOPIC_NODES"),
-      "export SOURCE_TOPIC_RELATIONSHIPS=" +
-        node.tryGetContext("SOURCE_TOPIC_RELATIONSHIPS"),
-      "export KAFKA_TOPIC=" + node.tryGetContext("KAFKA_TOPIC"),
+      "export AWS_REGION=" +
+        process.env.CDK_DEFAULT_REGION +
+        " >> /etc/profile.d/user-data-export.sh",
+      "echo export SOURCE_TOPIC_NODES=" +
+        node.tryGetContext("SOURCE_TOPIC_NODES") +
+        " >> /etc/profile.d/user-data-export.sh",
+      "echo export SOURCE_TOPIC_RELATIONSHIPS=" +
+        node.tryGetContext("SOURCE_TOPIC_RELATIONSHIPS") +
+        " >> /etc/profile.d/user-data-export.sh",
+      "echo export KAFKA_TOPIC=" +
+        node.tryGetContext("KAFKA_TOPIC") +
+        " >> /etc/profile.d/user-data-export.sh",
+      "source /etc/profile.d/user-data-export.sh",
       "rm -rf streaming-neo4j-msk-neptune/ && git clone https://github.com/sahays/streaming-neo4j-msk-neptune.git",
       "cd /streaming-neo4j-msk-neptune/ && chmod +x startup.sh && . startup.sh"
     ];
