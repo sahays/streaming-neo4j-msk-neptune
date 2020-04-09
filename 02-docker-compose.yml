@@ -30,28 +30,28 @@ services:
     volumes:
       - shared-folder:/data
     environment:
-      - NEO4J_AUTH: none
-      - NEO4J_dbms_logs_debug_level: DEBUG
+      - NEO4J_AUTH=none
+      - NEO4J_dbms_logs_debug_level=DEBUG
       # KAFKA related configuration
-      - NEO4J_kafka_zookeeper_connect: ${ZOOKEEPER_CONNECT}
-      - NEO4J_kafka_bootstrap_servers: ${BOOTSTRAP_SERVERS}
-      - NEO4J_kafka_security_protocol: SSL
-      - NEO4J_kafka_ssl_truststore_location: /var/lib/neo4j/temp/kafka.client.truststore.jks
-      - NEO4J_kafka_acks: 1
-      - NEO4J_kafka_num_partitions: 1
-      - NEO4J_kafka_retries: 2
-      - NEO4J_auto_create_topics_enable: "true"
+      - NEO4J_kafka_zookeeper_connect=${ZOOKEEPER_CONNECT}
+      - NEO4J_kafka_bootstrap_servers=${BOOTSTRAP_SERVERS}
+      - NEO4J_kafka_security_protocol=SSL
+      - NEO4J_kafka_ssl_truststore_location=/var/lib/neo4j/temp/kafka.client.truststore.jks
+      - NEO4J_kafka_acks=1
+      - NEO4J_kafka_num_partitions=1
+      - NEO4J_kafka_retries=2
+      - NEO4J_auto_create_topics_enable="true"
       # streams
-      - NEO4J_streams_procedures_enabled: "true"
-      - NEO4J_streams_source_enabled: "true"
-      - "NEO4J_streams_source_topic_nodes_${KAFKA_TOPIC}:${SOURCE_TOPIC_NODES}"
-      - "NEO4J_streams_source_topic_relationships_${KAFKA_TOPIC}:${SOURCE_TOPIC_RELATIONSHIPS}"
-      NEO4J_streams_source_schema_polling_interval: 10000
+      - NEO4J_streams_procedures_enabled="true"
+      - NEO4J_streams_source_enabled="true"
+      - "NEO4J_streams_source_topic_nodes_${KAFKA_TOPIC}=${SOURCE_TOPIC_NODES}"
+      - "NEO4J_streams_source_topic_relationships_${KAFKA_TOPIC}=${SOURCE_TOPIC_RELATIONSHIPS}"
+      NEO4J_streams_source_schema_polling_interval=10000
       # other
-      - NEO4J_apoc_trigger_enabled: "true"
-      - NEO4J_dbms_jvm_additional: -Djavax.net.debug=ssl:handshake
-      - NEO4J_dbms_security_procedures_whitelist: apoc.*,streams.*
-      - NEO4J_dbms_security_procedures_unrestricted: apoc.*,streams.*
+      - NEO4J_apoc_trigger_enabled="true"
+      - NEO4J_dbms_jvm_additional=-Djavax.net.debug=ssl:handshake
+      - NEO4J_dbms_security_procedures_whitelist=apoc.*,streams.*
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*,streams.*
   transformation-service:
     build: ./docker-files/transformation-service
     container_name: transformation-service
