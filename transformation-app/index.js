@@ -40,22 +40,24 @@ const run = async () => {
   const consumer = kafka.consumer({ groupId: config.groupId });
 
   // Consuming
-  try {
-    await consumer.connect();
-  } catch (e) {
-    console.log("error connecting", e);
-  }
 
   const token = setInterval(async () => {
     try {
+      try {
+        await consumer.connect();
+        console.log("connected to ", config.groupId);
+      } catch (e) {
+        console.log("error connecting", e);
+      }
       await consumer.subscribe({
         topic: config.kafkaTopic,
         fromBeginning: true,
       });
       clearInterval(token);
-      console.log("subscribed");
+      console.log("subscribed to ", config.kafkaTopic);
     } catch (e) {
       console.log("error subscribing, retrying...", e);
+      await consumer.disconnect();
     }
   }, 5000);
 
