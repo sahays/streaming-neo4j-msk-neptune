@@ -30,9 +30,6 @@ services:
     volumes:
       - shared-folder:/data
     environment:
-      KAFKA_TOPIC:
-      SOURCE_TOPIC_NODES:
-      SOURCE_TOPIC_RELATIONSHIPS:
       NEO4J_AUTH: none
       NEO4J_dbms_logs_debug_level: DEBUG
       # KAFKA related configuration
