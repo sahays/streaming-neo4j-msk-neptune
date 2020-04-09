@@ -11,14 +11,14 @@ const UserDataScript = () => {
       "service docker start",
       "usermod -a -G docker ec2-user",
       "chkconfig docker on",
-      "yum install -y git"
+      "yum install -y git",
     ];
     neo4jEc2.addUserData(installDocker.join("\n"));
 
     const installDockerCompose = [
       'curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose',
       "chmod +x /usr/local/bin/docker-compose",
-      "ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose"
+      "ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose",
     ];
     neo4jEc2.addUserData(installDockerCompose.join("\n"));
 
@@ -26,9 +26,9 @@ const UserDataScript = () => {
       "echo export AWS_REGION=" +
         process.env.CDK_DEFAULT_REGION +
         " >> /etc/profile.d/user-data-export.sh",
-      "echo export SOURCE_TOPIC_NODES=" +
+      "echo export SOURCE_TOPIC_NODES='" +
         node.tryGetContext("SOURCE_TOPIC_NODES") +
-        " >> /etc/profile.d/user-data-export.sh",
+        "' >> /etc/profile.d/user-data-export.sh",
       "echo export SOURCE_TOPIC_RELATIONSHIPS=" +
         node.tryGetContext("SOURCE_TOPIC_RELATIONSHIPS") +
         " >> /etc/profile.d/user-data-export.sh",
@@ -37,7 +37,7 @@ const UserDataScript = () => {
         " >> /etc/profile.d/user-data-export.sh",
       "source /etc/profile.d/user-data-export.sh",
       "rm -rf streaming-neo4j-msk-neptune/ && git clone https://github.com/sahays/streaming-neo4j-msk-neptune.git",
-      "cd /streaming-neo4j-msk-neptune/ && chmod +x startup.sh && . startup.sh"
+      "cd /streaming-neo4j-msk-neptune/ && chmod +x startup.sh && . startup.sh",
     ];
     neo4jEc2.addUserData(runAfterDeploy.join("\n"));
   };
