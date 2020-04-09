@@ -46,6 +46,8 @@ const run = async () => {
     console.log("error connecting", e);
   }
 
+  const token = setInterval(retrySubscription, 5000);
+
   const retrySubscription = async () => {
     try {
       await consumer.subscribe({
@@ -58,8 +60,6 @@ const run = async () => {
       console.log("error subscribing, retrying...", e);
     }
   };
-
-  const token = setInterval(retrySubscription, 5000);
 
   const g = makeG();
 
