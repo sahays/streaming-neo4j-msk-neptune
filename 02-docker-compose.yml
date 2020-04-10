@@ -5,14 +5,14 @@ version: "3.7"
 volumes:
   shared-folder:
 services:
-  # kafka-topic-service:
-  #   build: ./docker-files/kafka-topic-service
-  #   container_name: kafka-topic-service
-  #   hostname: kafka-topic-service
-  #   command: sh -c "/run-script.sh"
-  #   environment:
-  #     - KAFKA_TOPIC
-  #     - ZOOKEEPER_CONNECT
+  kafka-topic-service:
+    build: ./docker-files/kafka-topic-service
+    container_name: kafka-topic-service
+    hostname: kafka-topic-service
+    command: sh -c "/run-script.sh"
+    environment:
+      - KAFKA_TOPIC
+      - ZOOKEEPER_CONNECT
   neo4j-service:
     build: ./docker-files/neo4j-service
     container_name: neo4j-service

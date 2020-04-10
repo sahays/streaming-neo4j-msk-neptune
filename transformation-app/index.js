@@ -39,30 +39,12 @@ console.log(config);
 const run = async () => {
   const consumer = kafka.consumer({ groupId: config.groupId });
 
-  // Consuming
-  let maxRetries = 30;
-  const token = setInterval(async () => {
-    maxRetries--;
-    console.log(maxRetries, "retries left");
-    if (maxRetries <= 0) clearInterval(token);
-    try {
-      try {
-        await consumer.connect();
-        console.log("connected to", config.groupId);
-      } catch (e) {
-        console.log("error connecting", e);
-      }
-      await consumer.subscribe({
-        topic: config.kafkaTopic,
-        fromBeginning: true,
-      });
-      clearInterval(token);
-      console.log("subscribed to", config.kafkaTopic);
-    } catch (e) {
-      console.log("error subscribing, retrying...", e);
-      await consumer.disconnect();
-    }
-  }, 5000);
+  await consumer.connect();
+
+  await consumer.subscribe({
+    topic: config.kafkaTopic,
+    fromBeginning: true,
+  });
 
   const g = makeG();
 
