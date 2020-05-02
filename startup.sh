@@ -1,3 +1,6 @@
+# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+
 # tear down if setup already
 docker-compose -f 02-docker-compose.yml down --remove-orphans
 docker-compose -f 01-docker-compose.yml down --remove-orphans

@@ -4,6 +4,26 @@
 
 # Prerequisites
 
+- Install
+  [Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+- Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+- [Install](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
+  and
+  [Configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
+  [AWS CLI](https://aws.amazon.com/cli/)
+- The [IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id.html)
+  configured in the AWS profile must have the privileges to provision the
+  following resources. Please note, while working with AWS acounts, IAM users
+  and policies always follow
+  [IAM best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html):
+  - Amazon VPC and Subnets
+  - Amazon EC2 instance
+  - Amazon S3 bucket
+  - Amazon S3 Gateway VPC Endpoint
+  - An Amazon Neptune cluster
+- Install
+  [AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html)
+
 # Launching the app
 
 To setup the app, run the following commands:
@@ -17,21 +37,31 @@ cd streaming-neo4j-msk-neptune/bootstrapper
 
 ## Review configuration file
 
-Before launching the app, observe and make changes to `cdk.json` file inside
-`streaming-neo4j-msk-neptune/bootstrapper`. You need to provide an Amazon EC2
-key-value pair name replacing the placeholder text `<your-ec2-key-pair-name>`
+- Verify the app specific configuration saved in `bootstrapper/cdk.json` to
+  ensure you have the right values for your environment
+  - (Required) replace `<your-key-pair-name>` with your own
+    [EC2 key pair](https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair)
+    name e.g. `my-us-west-2-key-pair`
+  - (Required) replace `<provide-your-ip>` with your current IP address e.g.
+    8.8.8.8/32 [Know your IP address](https://www.whatsmyip.org/)
 
 ```
 {
   "app": "node bin/bootstrapper.js",
   "context": {
-    "vpc_cidr": "192.168.0.0/16",
-    "ec2_class": "t3a",
-    "ec2_type": "xlarge",
-    "ec2_key_pair": "<your-ec2-key-pair-name>",
-    "sg_fromIp": "0.0.0.0/0"
+    "VPC_CIDR": "192.168.0.0/16",
+    "EC2_CLASS": "t3a",
+    "EC2_TYPE": "xlarge",
+    "EC2_KEY_PAIR": "<your-key-pair-name>",
+    "SG_FROM_IP": "<provide-your-ip>",
+    "KAFKA_BROKER_INSTANCE_TYPE": "kafka.m5.large",
+    "NEPTUNE_DB_INSTANCE_TYPE": "db.r5.large",
+    "SOURCE_TOPIC_NODES": "Person{*};Movie{*}",
+    "SOURCE_TOPIC_RELATIONSHIPS": "ACTED_IN{*}",
+    "KAFKA_TOPIC": "graphstream"
   }
 }
+
 ```
 
 ## Deploy
